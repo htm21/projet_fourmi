@@ -27,10 +27,6 @@ def JeuEnCours():
     else :
         boutton_start_stop.config(text="START")
 
-    
-
-
-
 #Partie graphique 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
