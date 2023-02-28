@@ -7,7 +7,7 @@ HEIGHT = 700
 WIDTH = 700
 
 #POUR LES CASES
-case = []                   #varia
+case = []                   #variable de la liste 2D
 nombre_case = 50
 
 
