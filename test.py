@@ -1,6 +1,6 @@
 import tkinter as tk
 
-#LES DIFFÉRENTES CONSTANTES
+#LES DIFFÉRENTES VARIABLES
 
 #POUR LE CANVAS
 HEIGHT = 700
@@ -8,7 +8,7 @@ WIDTH = 700
 
 #POUR LES CASES
 case = []                   #variable de la liste 2D
-nombre_case = 50
+nombre_case = 40
 
 
 #Initiation liste 2D de la grille
@@ -20,32 +20,33 @@ for ligne in range(nombre_case):
         sous_liste.append(0)                                #[[0,0,0,...,0,0,0,0],[0,0,0,...,0,0,0,0],...]
     case.append(sous_liste)
 
-#def JeuEnCours():
-    #global boutton_start_stop
-
-    #if boutton_start_stop["text"] == "START" :
-        #boutton_start_stop.config(text="STOP")
-    #else :
-        #boutton_start_stop.config(text="START")
-
-#Partie graphique 
-racine = tk.Tk()
-racine.title("La Fourmi de Langton")
-racine.geometry("1000x800")
-
+#VARIABLES POUR LES FONCTIONS
 vitesse = 1
+
+
+#FONCTIONS 
+
+def quitter():
+    racine.destroy()
 
 def changer_vitesse():
     global vitesse
     if vitesse == 1:
-        boutton_accelerer.config(text="Vitesse x 2")
+        boutton_Vitesse.config(text="Vitesse x 2")
         vitesse = 2
     elif vitesse == 2:
-        boutton_accelerer.config(text="Vitesse x 0.5")
+        boutton_Vitesse.config(text="Vitesse x 0.5")
         vitesse = 0.5
     elif vitesse == 0.5:
-        boutton_accelerer.config(text="Vitesse x 1")
+        boutton_Vitesse.config(text="Vitesse x 1")
         vitesse = 1
+
+
+
+#Partie graphique 
+racine = tk.Tk()
+racine.title("La Fourmi de Langton")
+racine.geometry("1200x1000")
 
 
 Canvas = tk.Canvas(racine, height=HEIGHT, width=WIDTH)
@@ -61,40 +62,67 @@ Canvas = tk.Canvas(racine, height=HEIGHT, width=WIDTH)
 
   for lignes in range(nombre_case)] for colonnes in range(nombre_case)]                
 
-boutton_start = tk.Button(racine, text="START", font=("Arial",20,"bold"),
+boutton_Start = tk.Button(racine, text="PLAY", font=("Arial",20,"bold"),
                        fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
                        relief="raised",bd=10,pady=10,padx=20
                     )
 
-boutton_stop = tk.Button(racine, text="RESET", font=("Arial",20,"bold"),
+boutton_Pause = tk.Button(racine, text="PAUSE", font=("Arial",20,"bold"),
                        fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
                        relief="raised",bd=10,pady=10,padx=20
                     )
 
-boutton_pause = tk.Button(racine, text="STOP", font=("Arial",20,"bold"),
+boutton_Quitter = tk.Button(racine, text="QUITTER", font=("Arial",20,"bold"),
                        fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
-                       relief="raised",bd=10,pady=10,padx=20
+                       relief="raised",bd=10,pady=10,padx=20,command=quitter
                     )
 
-label_text = tk.Label(racine, text="LES COMMANDES AVANCÉES", font=("Poppins",15,"bold"),
-                       fg="black", activeforeground="black"
+
+label_Texte = tk.Label(racine, text="LES COMMANDES AVANCÉES", font=("Metropolis",20,"bold"),
+                       fg="#2A1164", activeforeground="black",background="white"
                     )
 
-boutton_accelerer = tk.Button(racine, text="Vitesse : x1",font=("Poppins",20,"bold"),
-                       fg="black", activeforeground="black",command=changer_vitesse
+boutton_Vitesse = tk.Button(racine, text="Vitesse : x1",font=("Airial Black",20,"bold"),
+                       fg="black", activeforeground="black",width=10,height=1, command=changer_vitesse
                        )
 
-boutton_retour = tk.Button(racine, text="RETOUR",font=("Poppins",20,"bold"),
-                       fg="black", activeforeground="black"
+boutton_Retour = tk.Button(racine, text="RETOUR",font=("Poppins",20,"bold"),
+                       fg="black", activeforeground="black",width=10,height=1
                        )
 
-boutton_start.grid(row=0,column=0)
-boutton_pause.grid(row=0,column=1)
-boutton_stop.grid(row=0,column=2)
-boutton_accelerer.grid(row=1, column=4)
-boutton_retour.grid(row=2,column=4)
+boutton_Avancer = tk.Button(racine, text="AVANCER",font=("Poppins",20,"bold"),
+                       fg="black", activeforeground="black",width=10,height=1
+                        )
 
-label_text.grid(row = 0, column=4)
+boutton_Sauvegarder = tk.Button(racine,text="SAUVEGARDER",font=("Poppins",20,"bold"),
+                       fg="black", activeforeground="black",width=10,height=1
+                       )
+
+boutton_Ouvrir = tk.Button(racine, text="CHARGER",font=("Poppins",20,"bold"),
+                           fg="black", activeforeground="black",width=10,height=1
+                        )
+
+#PLACEMENTS 
+    #-> BOUTONS
+
+#AU DESSUS DE LA GRILLE
+boutton_Start.grid(row=0,column=0)
+boutton_Pause.grid(row=0,column=1)
+boutton_Quitter.grid(row=0,column=2)
+
+#Côté droit (3 Blocs)
+
+boutton_Vitesse.grid(row=1, column=4,pady=10,padx=20,columnspan=2)
+
+
+boutton_Avancer.grid(row=2,column=4,pady=10,padx=20)
+boutton_Retour.grid(row=2,column=5,pady=10,padx=20)
+
+boutton_Sauvegarder.grid(row=3,column=4,pady=20,padx=10)
+boutton_Ouvrir.grid(row=3,column=5,padx=10,pady=20)
+
+    #-> Label
+label_Texte.grid(row = 0, column=4,pady=10,padx=20,columnspan=4)
 
 Canvas.grid(row=1,column=0,columnspan=4,rowspan=4,padx=25)
 racine.mainloop()
