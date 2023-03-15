@@ -32,13 +32,13 @@ def quitter():
 def changer_vitesse():
     global vitesse
     if vitesse == 1:
-        boutton_Vitesse.config(text="Vitesse x 2")
+        boutton_Vitesse.config(text="VITESSE : x 2")
         vitesse = 2
     elif vitesse == 2:
-        boutton_Vitesse.config(text="Vitesse x 0.5")
+        boutton_Vitesse.config(text="VITESSE : x 0.5")
         vitesse = 0.5
     elif vitesse == 0.5:
-        boutton_Vitesse.config(text="Vitesse x 1")
+        boutton_Vitesse.config(text="VITESSE : x 1")
         vitesse = 1
 
 
@@ -64,17 +64,17 @@ Canvas = tk.Canvas(racine, height=HEIGHT, width=WIDTH)
 
 boutton_Start = tk.Button(racine, text="PLAY", font=("Arial",20,"bold"),
                        fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
-                       relief="raised",bd=10,pady=10,padx=20
+                       relief="raised",bd=10,pady=10,padx=20,width=10
                     )
 
 boutton_Pause = tk.Button(racine, text="PAUSE", font=("Arial",20,"bold"),
                        fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
-                       relief="raised",bd=10,pady=10,padx=20
+                       relief="raised",bd=10,pady=10,padx=20,width=10
                     )
 
 boutton_Quitter = tk.Button(racine, text="QUITTER", font=("Arial",20,"bold"),
                        fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
-                       relief="raised",bd=10,pady=10,padx=20,command=quitter
+                       relief="raised",bd=10,pady=10,padx=20,width=10,command=quitter
                     )
 
 
@@ -82,7 +82,7 @@ label_Texte = tk.Label(racine, text="LES COMMANDES AVANCÉES", font=("Metropolis
                        fg="#2A1164", activeforeground="black",background="white"
                     )
 
-boutton_Vitesse = tk.Button(racine, text="Vitesse : x1",font=("Airial Black",20,"bold"),
+boutton_Vitesse = tk.Button(racine, text="VITESSE : x1",font=("Airial Black",20,"bold"),
                        fg="black", activeforeground="black",width=10,height=1, command=changer_vitesse
                        )
 
@@ -121,8 +121,9 @@ boutton_Retour.grid(row=2,column=5,pady=10,padx=20)
 boutton_Sauvegarder.grid(row=3,column=4,pady=20,padx=10)
 boutton_Ouvrir.grid(row=3,column=5,padx=10,pady=20)
 
-    #-> Label
+    #-> TEXTE
 label_Texte.grid(row = 0, column=4,pady=10,padx=20,columnspan=4)
 
+    #-> CANEVAS
 Canvas.grid(row=1,column=0,columnspan=4,rowspan=4,padx=25)
 racine.mainloop()
