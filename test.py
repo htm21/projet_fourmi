@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import filedialog
 
 #LES DIFFÉRENTES VARIABLES
 
@@ -9,6 +10,9 @@ WIDTH = 700
 #POUR LES CASES
 case = []                   #variable de la liste 2D
 nombre_case = 40
+
+#POUR LA FOURMI
+
 
 
 #Initiation liste 2D de la grille
@@ -40,6 +44,18 @@ def changer_vitesse():
     elif vitesse == 0.5:
         boutton_Vitesse.config(text="VITESSE : x 1")
         vitesse = 1
+
+def load():
+    chemin_acces = file_path = filedialog.askopenfilename(initialdir='/Users/Ahmad/Desktop/UNI - UVSQ/L1 BI/S2/projet_fourmi',
+                                                           title="Charger une partie", filetypes=(("Fichiers textes", "*.txt"),
+                                                                                                   ("Tous les fichiers", "*.*"))
+                                                        )
+
+def save():                                                               #https://www.geeksforgeeks.org/python-asksaveasfile-function-in-tkinter/
+    fichier = [('All Files', '*.*'),                                                    #en cours de dev 
+             ('Python Files', '*.py'),                      
+             ('Text Document', '*.txt')]
+    fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
 
 
 
@@ -102,11 +118,13 @@ boutton_Avancer = tk.Button(racine, text="AVANCER",font=("Poppins",20,"bold"),
 boutton_Sauvegarder = tk.Button(racine,text="SAUVEGARDER",font=("Poppins",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
                        bd=10,pady=5,padx=20,width=10,
+                       command=save
                        )
 
 boutton_Ouvrir = tk.Button(racine, text="CHARGER",font=("Poppins",20,"bold"),
                            fg="black", activeforeground="black",activebackground="white",
                        bd=10,pady=5,padx=20,width=10,
+                       command=load
                         )
 
 #PLACEMENTS 
