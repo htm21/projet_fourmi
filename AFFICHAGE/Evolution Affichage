@@ -190,7 +190,8 @@ def changer_vitesse():
 #Partie graphique 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
-racine.geometry("1200x1000")
+racine.geometry("1300x800")
+racine.configure(bg="black")
 
 
 Canvas = tk.Canvas(racine, height=HEIGHT, width=WIDTH)
@@ -207,43 +208,49 @@ Canvas = tk.Canvas(racine, height=HEIGHT, width=WIDTH)
   for lignes in range(nombre_case)] for colonnes in range(nombre_case)]                
 
 boutton_Start = tk.Button(racine, text="PLAY", font=("Arial",20,"bold"),
-                       fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
-                       relief="raised",bd=10,pady=10,padx=20,width=10
+                       fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,
                     )
 
 boutton_Pause = tk.Button(racine, text="PAUSE", font=("Arial",20,"bold"),
-                       fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
-                       relief="raised",bd=10,pady=10,padx=20,width=10
+                       fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,
                     )
 
 boutton_Quitter = tk.Button(racine, text="QUITTER", font=("Arial",20,"bold"),
-                       fg="#DF0101", bg="#0404B4",activeforeground="#DF0101",
-                       relief="raised",bd=10,pady=10,padx=20,width=10,command=quitter
+                       fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,command=quitter
                     )
 
 
 label_Texte = tk.Label(racine, text="LES COMMANDES AVANCÉES", font=("Metropolis",20,"bold"),
-                       fg="#2A1164", activeforeground="black",background="white"
+                       fg="#8f6745",bg="black",activeforeground="black"
                     )
 
 boutton_Vitesse = tk.Button(racine, text="VITESSE : x1",font=("Airial Black",20,"bold"),
-                       fg="black", activeforeground="black",width=10,height=1, command=changer_vitesse
+                       fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,
+                       command=changer_vitesse
                        )
 
 boutton_Retour = tk.Button(racine, text="RETOUR",font=("Poppins",20,"bold"),
-                       fg="black", activeforeground="black",width=10,height=1
+                       fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,
                        )
 
 boutton_Avancer = tk.Button(racine, text="AVANCER",font=("Poppins",20,"bold"),
-                       fg="black", activeforeground="black",width=10,height=1
+                       fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,
                         )
 
 boutton_Sauvegarder = tk.Button(racine,text="SAUVEGARDER",font=("Poppins",20,"bold"),
-                       fg="black", activeforeground="black",width=10,height=1
+                       fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,
                        )
 
 boutton_Ouvrir = tk.Button(racine, text="CHARGER",font=("Poppins",20,"bold"),
-                           fg="black", activeforeground="black",width=10,height=1
+                           fg="black", activeforeground="black",activebackground="white",
+                       bd=10,pady=5,padx=20,width=10,
                         )
 
 #PLACEMENTS 
