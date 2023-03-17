@@ -16,7 +16,7 @@ nombre_case = 40
 
 for ligne in range(nombre_case):
     sous_liste = []
-    for colonne in range(nombre_case):             #liste en 2D qui contient 50 lignes et 50 colonnes
+    for colonne in range(nombre_case):             #liste en 2D qui contient 40 lignes et 40 colonnes
         sous_liste.append(0)                                #[[0,0,0,...,0,0,0,0],[0,0,0,...,0,0,0,0],...]
     case.append(sous_liste)
 

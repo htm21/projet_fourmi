@@ -2,5 +2,5 @@
 # projet_fourmi
 
 GROUPE DE TD : BI - TD02
-NOM DES ÉTUDIANTS : 
+NOM DES ÉTUDIANTS : Ahmad HATOUM (22202060) - Daniel KEBBOUS () - Yasmine FAIZ (22202730)
 URL DE DÉPÔT DU PROJET : https://github.com/uvsq22202060/projet_fourmi
