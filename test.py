@@ -95,7 +95,7 @@ boutton_Quitter = tk.Button(racine, text="QUITTER", font=("Arial",20,"bold"),
                     )
 
 
-label_Texte = tk.Label(racine, text="LES COMMANDES AVANCÉES", font=("Metropolis",20,"bold"),
+label_Texte = tk.Label(racine, text="LES COMMANDES AVANCÉES", font=("Metropolis",30,"bold"),
                        fg="#8f6745",bg="black",activeforeground="black"
                     )
 
