@@ -1,5 +1,6 @@
-import time as t
 import tkinter as tk
+from tkinter import filedialog
+import time as t
 
 # ========== VAR ==========
 
@@ -26,12 +27,12 @@ def changer_vitesse():
 
 def load():
     '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
-    file_path = tk.filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name
+    file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name
 
 def save(): 
     '''Ouvre une fenetre pour '''
     fichier = [('Text Document', '*.txt')]
-    fichier = tk.filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
+    fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
 
 def avencer():
     '''Fait avencer le jeu d'une unité de temps'''
@@ -70,7 +71,7 @@ boutton_Pause       = tk.Button(racine, text = "PAUSE",                  font = 
 
 label_Texte         = tk.Label (racine, text = "LES COMMANDES AVANCÉES", font = ("Metropolis 20 bold"),      fg = "#8f6745", activeforeground = "black",  bg="black")   
 boutton_Quitter     = tk.Button(racine, text = "QUITTER",                font = ("Arial 20 bold"),           fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = quitter)
-boutton_Vitesse     = tk.Button(racine, text = vitesse_jeu[1],           font = ("Airial Black 20 bold"),    fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = changer_vitesse)
+boutton_Vitesse     = tk.Button(racine, text = vitesse_jeu[1],           font = ("Airial 20 bold"),          fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = changer_vitesse)
 boutton_Retour      = tk.Button(racine, text = "RETOUR",                 font = ("Poppins 20 bold"),         fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = retour)
 boutton_Avancer     = tk.Button(racine, text = "AVANCER",                font = ("Poppins 20 bold"),         fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = avencer)
 boutton_Sauvegarder = tk.Button(racine, text = "SAUVEGARDER",            font = ("Poppins 20 bold"),         fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = save)
