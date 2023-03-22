@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import time as t
 from tkinter import filedialog
+=======
+>>>>>>> 75d33904a3d7899f334e60b38526524eb18c09e6
 import tkinter as tk
+from tkinter import filedialog
+import time as t
 
 # ========== VAR ==========
 
@@ -175,9 +180,43 @@ boutton_Ouvrir.pack       (padx = 5, pady = 5, side = "right")
 # création de la grille de base avec les cases apparantes
 # (HEIGHT/HAUTEUR)/nombre_case permet la création de case proportionnelle au Canvas
 
+<<<<<<< HEAD
 Canvas = tk.Canvas(terrain_jeu_frame, height = HEIGHT, width = WIDTH, highlightthickness = 0, bg = "#1b1b1b")
 Canvas.pack (expand = 1, fill = None, anchor = "center")
 canvas_refresh()
+=======
+
+boutton_Start       = tk.Button(racine, text = "PLAY",                   font = ("Arial 20 bold"),           fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = start)
+boutton_Pause       = tk.Button(racine, text = "PAUSE",                  font = ("Arial 20 bold"),           fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = pause)                
+
+label_Texte         = tk.Label (racine, text = "LES COMMANDES AVANCÉES", font = ("Metropolis 20 bold"),      fg = "#8f6745", activeforeground = "black",  bg="black")   
+boutton_Quitter     = tk.Button(racine, text = "QUITTER",                font = ("Arial 20 bold"),           fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = quitter)
+boutton_Vitesse     = tk.Button(racine, text = vitesse_jeu[1],           font = ("Airial 20 bold"),          fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = changer_vitesse)
+boutton_Retour      = tk.Button(racine, text = "RETOUR",                 font = ("Poppins 20 bold"),         fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = retour)
+boutton_Avancer     = tk.Button(racine, text = "AVANCER",                font = ("Poppins 20 bold"),         fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = avencer)
+boutton_Sauvegarder = tk.Button(racine, text = "SAUVEGARDER",            font = ("Poppins 20 bold"),         fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = save)
+boutton_Ouvrir      = tk.Button(racine, text = "CHARGER",                font = ("Poppins 20 bold"),         fg = "black",   activeforeground = "black", activebackground = "white", bd = 10, pady = 5, padx = 20, width = 10, command = load)
+
+
+# PLACEMENTS BOUTONS:
+
+boutton_Start.grid       (row = 0, column = 0)
+boutton_Pause.grid       (row = 0, column = 1)
+boutton_Quitter.grid     (row = 0, column = 2)
+
+boutton_Vitesse.grid     (row = 1, column = 4, pady = 10, padx = 20, columnspan=2)
+boutton_Avancer.grid     (row = 2, column = 4, pady = 10, padx = 20)
+boutton_Retour.grid      (row = 2, column = 5, pady = 10, padx = 20)
+
+boutton_Sauvegarder.grid (row = 3, column = 4, pady = 20, padx = 10)
+boutton_Ouvrir.grid      (row = 3, column = 5, padx = 10, pady = 20)
+
+# PLACEMENTS LABEL
+label_Texte.grid         (row = 0, column = 4, pady = 10, padx=20, columnspan=4)
+
+# PLACEMENTS CANVAS
+Canvas.grid              (row = 1, column = 0, columnspan = 4, rowspan = 4, padx = 25)
+>>>>>>> 75d33904a3d7899f334e60b38526524eb18c09e6
 
 
 racine.mainloop()
