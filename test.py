@@ -59,7 +59,7 @@ def save():                                                               #https
 
 
 
-#Partie graphique 
+# ========== Tkinter GUI ========== 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
 racine.geometry("1300x800")
@@ -68,16 +68,9 @@ racine.configure(bg="black")
 
 Canvas = tk.Canvas(racine, height=HEIGHT, width=WIDTH)
 
-#création de la grille de base avec les cases apparantes
-        #-> liste en compréhension : https://python.doctor/page-comprehension-list-listes-python-cours-debutants
-
-                        #(HEIGHT/HAUTEUR)/nombre_case permet la création de case proportionnelle au Canvas
-                                #-> https://docs.python.org/3/library/tkinter.html (Partie sur les Canvas)
-
-[[Canvas.create_rectangle(colonnes*(HEIGHT/nombre_case),lignes*(WIDTH/nombre_case),(colonnes+1)*(HEIGHT/nombre_case),(lignes+1)*(WIDTH/nombre_case),
-                          fill="white",outline="black")
-
-  for lignes in range(nombre_case)] for colonnes in range(nombre_case)]                
+# création de la grille de base avec les cases apparantes
+# (HEIGHT/HAUTEUR)/nombre_case permet la création de case proportionnelle au Canvas
+[[Canvas.create_rectangle(colonnes*(HEIGHT/nombre_case), lignes*(WIDTH/nombre_case), (colonnes+1) * (HEIGHT/nombre_case), (lignes+1) * (WIDTH/nombre_case), fill = "white", outline = "black") for lignes in range(nombre_case)] for colonnes in range(nombre_case)]
 
 boutton_Start = tk.Button(racine, text="PLAY", font=("Arial",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
