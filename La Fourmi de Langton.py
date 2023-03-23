@@ -158,9 +158,9 @@ bouton_Charger     = tk.Button(game_file_control,        text = "Charger",      
 
 # BOUTTONS PACK:
 
-bouton_Start.pack        (padx = 5, pady = 5, side = "left", expand = 1)
-bouton_Pause.pack        (padx = 5, pady = 5, side = "left", expand = 1)
-bouton_Quitter.pack      (padx = 5, pady = 5, side = "left", expand = 1)
+bouton_Start.pack         (padx = 5, pady = 5, side = "left", expand = 1)
+bouton_Pause.pack         (padx = 5, pady = 5, side = "left", expand = 1)
+bouton_Quitter.pack       (padx = 5, pady = 5, side = "left", expand = 1)
 
 
 label_Texte.pack          (padx = 5, pady = 5, side = "top")
