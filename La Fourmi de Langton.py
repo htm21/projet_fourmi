@@ -8,7 +8,7 @@ HEIGHT, WIDTH = 950, 950 # Dimensions du canvas
 nombre_case   = 51 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [[0 for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
-vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
+vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
 vitesse_jeu   = vitesses[0] # Vitesse du jeu
 
 Running       = False
@@ -38,13 +38,14 @@ def load():
     file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name
 
 def save(): 
-    '''Ouvre une fenetre pour '''
+    '''Ouvre une fenetre pour savegarder la parie en cours'''
     fichier = [('Text Document', '*.txt')]
     fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
 
 def avencer():
     '''Fait avencer le jeu d'une unité de temps'''
-    pass
+    if Running: pass
+    else: fourmie_update()
 
 def retour():
     '''Fait retourner le jeu d'une unité de temps'''
@@ -60,7 +61,8 @@ def start():
 
 def pause():
     '''Met en pause le jeu'''
-    pass
+    global Running
+    Running = False
 
 def change_type_case(y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
@@ -113,8 +115,6 @@ print("\033c")
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
-racine.configure(bg = "black")
-
 width, height = 1920, 1080
 screen_width  = racine.winfo_screenwidth()
 screen_height = racine.winfo_screenheight()
