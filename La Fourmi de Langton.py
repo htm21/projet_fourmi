@@ -31,18 +31,18 @@ def changer_vitesse():
     '''Change la vitesse du jeu'''
     global vitesses, vitesse_jeu
     vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
-    boutton_Vitesse.config(text = vitesse_jeu[1])
+    bouton_Vitesse.config(text = vitesse_jeu[1])
 
-def load():
+def charger():
     '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
     file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name
 
-def save(): 
+def sauvegarder(): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
     fichier = [('Text Document', '*.txt')]
     fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
 
-def avencer():
+def avancer():
     '''Fait avencer le jeu d'une unité de temps'''
     if Running: pass
     else: fourmie_update()
@@ -145,30 +145,30 @@ game_file_control.pack        (padx = 10, pady = 30, expand = 0, fill = "both")
 
 # BOUTTONS CREATION:
 
-boutton_Start       = tk.Button(menu_du_haut_frame,       text = "Play",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
-boutton_Pause       = tk.Button(menu_du_haut_frame,       text = "Pause",                   font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
-boutton_Quitter     = tk.Button(menu_du_haut_frame,       text = "Quit",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
+bouton_Start       = tk.Button(menu_du_haut_frame,       text = "Play",                       font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
+bouton_Pause       = tk.Button(menu_du_haut_frame,       text = "Pause",                      font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
+bouton_Quitter     = tk.Button(menu_du_haut_frame,       text = "Quit",                       font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
 
-label_Texte         = tk.Label (menu_titre_frame,         text = "LES COMMANDES AVANCÉES",  font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")   
-boutton_Vitesse     = tk.Button(vitesse_frame,            text = vitesse_jeu[1],            font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = changer_vitesse)
-boutton_Retour      = tk.Button(controles_etat_jeu_frame, text = "Back",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = retour)
-boutton_Avancer     = tk.Button(controles_etat_jeu_frame, text = "Forward",                 font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = avencer)
-boutton_Sauvegarder = tk.Button(game_file_control,        text = "Save",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = save)
-boutton_Ouvrir      = tk.Button(game_file_control,        text = "Load",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = load)
+label_Texte        = tk.Label (menu_titre_frame,         text = "LES COMMANDES AVANCÉES",     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")   
+bouton_Vitesse     = tk.Button(vitesse_frame,            text = vitesse_jeu[1],               font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = changer_vitesse)
+bouton_Retour      = tk.Button(controles_etat_jeu_frame, text = "Retour",                     font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = retour)
+bouton_Avancer     = tk.Button(controles_etat_jeu_frame, text = "Avancer",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = avancer)
+bouton_Sauvegarder = tk.Button(game_file_control,        text = "Sauvegarder",                font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = sauvegarder)
+bouton_Charger     = tk.Button(game_file_control,        text = "Charger",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = charger)
 
 # BOUTTONS PACK:
 
-boutton_Start.pack        (padx = 5, pady = 5, side = "left", expand = 1)
-boutton_Pause.pack        (padx = 5, pady = 5, side = "left", expand = 1)
-boutton_Quitter.pack      (padx = 5, pady = 5, side = "left", expand = 1)
+bouton_Start.pack        (padx = 5, pady = 5, side = "left", expand = 1)
+bouton_Pause.pack        (padx = 5, pady = 5, side = "left", expand = 1)
+bouton_Quitter.pack      (padx = 5, pady = 5, side = "left", expand = 1)
 
 
 label_Texte.pack          (padx = 5, pady = 5, side = "top")
-boutton_Vitesse.pack      (padx = 5, pady = 5, side = "top")
-boutton_Avancer.pack      (padx = 5, pady = 5, side = "left")
-boutton_Retour.pack       (padx = 5, pady = 5, side = "right")
-boutton_Sauvegarder.pack  (padx = 5, pady = 5, side = "left")
-boutton_Ouvrir.pack       (padx = 5, pady = 5, side = "right")
+bouton_Vitesse.pack       (padx = 5, pady = 5, side = "top")
+bouton_Avancer.pack       (padx = 5, pady = 5, side = "left")
+bouton_Retour.pack        (padx = 5, pady = 5, side = "right")
+bouton_Sauvegarder.pack   (padx = 5, pady = 5, side = "left")
+bouton_Charger.pack       (padx = 5, pady = 5, side = "right")
 
 # CANVAS CREATION / PACK:
 
