@@ -14,6 +14,8 @@ nombre_case = 40
 #POUR LA FOURMI
 
 
+vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
+vitesse_jeu   = vitesses[0] # Vitesse du jeu
 
 #Initiation liste 2D de la grille
 #inspiration pour les 0 / 1 : http://pascal.ortiz.free.fr/contents/tkinter/projets_tkinter/langton/langton.html
@@ -34,16 +36,10 @@ def quitter():
     racine.destroy()
 
 def changer_vitesse():
-    global vitesse
-    if vitesse == 1:
-        boutton_Vitesse.config(text="VITESSE : x 2")
-        vitesse = 2
-    elif vitesse == 2:
-        boutton_Vitesse.config(text="VITESSE : x 0.5")
-        vitesse = 0.5
-    elif vitesse == 0.5:
-        boutton_Vitesse.config(text="VITESSE : x 1")
-        vitesse = 1
+    '''Change la vitesse du jeu'''
+    global vitesses, vitesse_jeu
+    vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
+    boutton_Vitesse.config(text = vitesse_jeu[1])
 
 def load():
     chemin_acces = file_path = filedialog.askopenfilename(initialdir='/Users/Ahmad/Desktop/UNI - UVSQ/L1 BI/S2/projet_fourmi',
