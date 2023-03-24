@@ -4,7 +4,9 @@ import time as t
 
 # ========== VAR ==========
 
-HEIGHT, WIDTH = 950, 950 # Dimensions du canvas
+HEIGHT, WIDTH = 500, 500
+
+# Dimensions du canvas
 nombre_case   = 51 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [[0 for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
@@ -115,7 +117,8 @@ print("\033c")
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
-width, height = 1920, 1080
+
+width, height = 1280, 720
 screen_width  = racine.winfo_screenwidth()
 screen_height = racine.winfo_screenheight()
 x, y          = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
