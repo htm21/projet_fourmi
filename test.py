@@ -112,6 +112,13 @@ def avancer():
     '''Fait avencer le jeu d'une unité de temps'''
     if Running: pass
     else: fourmie_update()
+    
+
+def open_wikipedia(event):
+    webbrowser.open_new("https://fr.wikipedia.org/wiki/Wikipédia:Accueil_principal")
+
+
+
 
 
 # ========== Tkinter GUI ========== 
@@ -203,3 +210,4 @@ Canvas.grid(row=1,column=0,columnspan=4,rowspan=4,padx=25)
 canvas_refresh()
 
 racine.mainloop()
+
