@@ -51,7 +51,10 @@ def avancer():
 
 def retour():
     '''Fait retourner le jeu d'une unité de temps'''
-    pass
+    #global case_actuelle, direction_fourmie
+
+    #if case_actuelle: direction_fourmie = directions[-1] if direction_fourmie == directions[0] else directions[directions.index(direction_fourmie) - 1]
+    #else:   fourmie_update
 
 def start():
     '''Fait commencer le jeu'''
