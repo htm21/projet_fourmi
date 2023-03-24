@@ -129,22 +129,22 @@ Canvas = tk.Canvas(racine, height=HEIGHT, width=WIDTH)
 boutton_Start = tk.Button(racine, text="PLAY", font=("Arial",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
                        bd=10,pady=5,padx=20,width=10,command=start
-                    )
+                       )
 
 boutton_Pause = tk.Button(racine, text="PAUSE", font=("Arial",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
                        bd=10,pady=5,padx=20,width=10,command=pause
-                    )
+                       )
 
 boutton_Quitter = tk.Button(racine, text="QUITTER", font=("Arial",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
                        bd=10,pady=5,padx=20,width=10,command=quitter
-                    )
+                       )
 
 
 label_Texte = tk.Label(racine, text="LES COMMANDES AVANCÉES", font=("Metropolis",30,"bold"),
                        fg="#8f6745",bg="black",activeforeground="black"
-                    )
+                        )
 
 boutton_Vitesse = tk.Button(racine, text="VITESSE : x1",font=("Airial Black",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
@@ -160,7 +160,7 @@ boutton_Retour = tk.Button(racine, text="RETOUR",font=("Poppins",20,"bold"),
 boutton_Avancer = tk.Button(racine, text="AVANCER",font=("Poppins",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
                        bd=10,pady=5,padx=20,width=10,command=avancer
-                        )
+                       )
 
 boutton_Sauvegarder = tk.Button(racine,text="SAUVEGARDER",font=("Poppins",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
@@ -172,7 +172,7 @@ boutton_Ouvrir = tk.Button(racine, text="CHARGER",font=("Poppins",20,"bold"),
                            fg="black", activeforeground="black",activebackground="white",
                        bd=10,pady=5,padx=20,width=10,
                        command=load
-                        )
+                       )
 
 #PLACEMENTS 
     #-> BOUTONS
