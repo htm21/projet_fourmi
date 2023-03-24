@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+import pygame
 
 #LES DIFFÉRENTES VARIABLES
 
@@ -79,7 +80,7 @@ boutton_Start = tk.Button(racine, text="PLAY", font=("Arial",20,"bold"),
 
 boutton_Pause = tk.Button(racine, text="PAUSE", font=("Arial",20,"bold"),
                        fg="black", activeforeground="black",activebackground="white",
-                       bd=10,pady=5,padx=20,width=10,
+                       bd=10,pady=5,padx=20,width=10,command=pause
                     )
 
 boutton_Quitter = tk.Button(racine, text="QUITTER", font=("Arial",20,"bold"),
