@@ -4,10 +4,10 @@ import time as t
 
 # ========== VAR ==========
 
-HEIGHT, WIDTH = 500, 500
+HEIGHT, WIDTH = 900, 900
 
 # Dimensions du canvas
-nombre_case   = 51 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 201 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [[0 for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
@@ -120,12 +120,13 @@ print("\033c")
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
+racine.state("zoomed")
 
-width, height = 1280, 720
-screen_width  = racine.winfo_screenwidth()
-screen_height = racine.winfo_screenheight()
-x, y          = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
-racine.geometry('%dx%d+%d+%d' % (width, height, x, y))
+# width, height = 1280, 720
+# screen_width  = racine.winfo_screenwidth()
+# screen_height = racine.winfo_screenheight()
+# x, y          = (screen_width / 2) - (width / 2), (screen_height / 2) - (height / 2)
+# racine.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
 # FRAMES CREATION:
 
@@ -155,7 +156,7 @@ bouton_Start       = tk.Button(menu_du_haut_frame,       text = "Play",         
 bouton_Pause       = tk.Button(menu_du_haut_frame,       text = "Pause",                      font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
 bouton_Quitter     = tk.Button(menu_du_haut_frame,       text = "Quit",                       font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
 
-label_Texte        = tk.Label (menu_titre_frame,         text = "LES COMMANDES AVANCÉES",     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")   
+label_Texte        = tk.Label (menu_titre_frame,         text = "Les Commandes Avancees",     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")   
 bouton_Vitesse     = tk.Button(vitesse_frame,            text = vitesse_jeu[1],               font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = changer_vitesse)
 bouton_Retour      = tk.Button(controles_etat_jeu_frame, text = "Retour",                     font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = retour)
 bouton_Avancer     = tk.Button(controles_etat_jeu_frame, text = "Avancer",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = avancer)
@@ -182,7 +183,7 @@ bouton_Charger.pack       (padx = 5, pady = 5, side = "right")
 # (HEIGHT/HAUTEUR)/nombre_case permet la création de case proportionnelle au Canvas
 
 Canvas = tk.Canvas(terrain_jeu_frame, height = HEIGHT, width = WIDTH, highlightthickness = 0, bg = "#1b1b1b")
-Canvas.pack (expand = 1, fill = None, anchor = "center")
+Canvas.pack (expand = 1, anchor = "center")
 canvas_refresh()
 
 
