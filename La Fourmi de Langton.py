@@ -7,7 +7,7 @@ import time as t
 HEIGHT, WIDTH = 900, 900
 
 # Dimensions du canvas
-nombre_case   = 201 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 151 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [[0 for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
@@ -23,46 +23,49 @@ field[nombre_case // 2][nombre_case // 2] = 3 # 3 c'est le symbol de la fourmie
 
 # ========== FUNC ==========
 
-def quitter():
+def quitter(*args):
     '''Ferme le programme'''
     global Running
     if Running: Running = False
     racine.destroy()
 
-def changer_vitesse():
+def changer_vitesse(*args):
     '''Change la vitesse du jeu'''
     global vitesses, vitesse_jeu
     vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
     bouton_Vitesse.config(text = vitesse_jeu[1])
 
-def charger():
+def charger(*args):
     '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
     file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name
 
-def sauvegarder(): 
+def sauvegarder(*args): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
     fichier = [('Text Document', '*.txt')]
     fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
 
-def avancer():
+def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
     if Running: pass
     else: fourmie_update()
 
-def retour():
+def retour(*args):
     '''Fait retourner le jeu d'une unité de temps'''
     #global case_actuelle, direction_fourmie
 
     #if case_actuelle: direction_fourmie = directions[-1] if direction_fourmie == directions[0] else directions[directions.index(direction_fourmie) - 1]
     #else:   fourmie_update
 
-def start():
-    '''Fait commencer le jeu'''
+def start(*args):
+    '''Fait tourner le jeu'''
     global Running
-    Running = True
-    while Running:
-        fourmie_update()
-        t.sleep(vitesse_jeu[0])
+    if Running: 
+        Running = False
+    else:
+        Running = True
+        while Running:
+            fourmie_update()
+            t.sleep(vitesse_jeu[0])
 
 def pause():
     '''Met en pause le jeu'''
@@ -185,6 +188,20 @@ bouton_Charger.pack       (padx = 5, pady = 5, side = "right")
 Canvas = tk.Canvas(terrain_jeu_frame, height = HEIGHT, width = WIDTH, highlightthickness = 0, bg = "#1b1b1b")
 Canvas.pack (expand = 1, anchor = "center")
 canvas_refresh()
+
+
+# ========== Raccourcis Clavier ==========
+
+racine.bind('<Escape>',    quitter)
+racine.bind("<space>",     start)
+
+racine.bind("<Tab>",       changer_vitesse)
+
+racine.bind("<Right>",     avancer)
+racine.bind("<Left>",      retour)
+
+racine.bind("<Control-s>", sauvegarder)
+racine.bind("<Control-l>", charger)
 
 
 racine.mainloop()
