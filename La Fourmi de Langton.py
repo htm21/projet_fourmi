@@ -7,7 +7,7 @@ import time as t
 HEIGHT, WIDTH = 900, 900
 
 # Dimensions du canvas
-nombre_case   = 151 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 101 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [[0 for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
@@ -102,7 +102,7 @@ def fourmie_update():
     case_actuelle = field[fourmie_pos[0]][fourmie_pos[1]]
     field[fourmie_pos[0]][fourmie_pos[1]] = 3
     Canvas.create_rectangle(fourmie_pos[1] * (HEIGHT / nombre_case), fourmie_pos[0] * (WIDTH / nombre_case), (fourmie_pos[1] + 1) * (HEIGHT / nombre_case), (fourmie_pos[0] + 1) * (WIDTH / nombre_case), outline = "black", fill = "red")
-    racine.update()
+    Canvas.update()
 
 
 def canvas_refresh():
