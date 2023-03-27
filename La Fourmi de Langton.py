@@ -124,6 +124,7 @@ print("\033c")
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
 racine.state("zoomed")
+racine.protocol("WM_DELETE_WINDOW", quitter)
 
 # width, height = 1280, 720
 # screen_width  = racine.winfo_screenwidth()
