@@ -4,9 +4,7 @@ import time as t
 
 # ========== VAR ==========
 
-HEIGHT, WIDTH = 900, 900
-
-# Dimensions du canvas
+HEIGHT, WIDTH = 700, 700 # Dimensions du canvas
 nombre_case   = 101 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [[0 for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
@@ -59,8 +57,7 @@ def retour(*args):
 def start(*args):
     '''Fait tourner le jeu'''
     global Running
-    if Running: 
-        Running = False
+    if Running: Running = False
     else:
         Running = True
         while Running:
@@ -93,12 +90,12 @@ def fourmie_update():
     change_type_case(*fourmie_pos)
 
     # Bouge la fourmie en fonction de son orientation
-    if direction_fourmie == "0":   fourmie_pos[0] = nombre_case - 1 if fourmie_pos [0] == 0 else fourmie_pos[0] - 1 # Up
-    if direction_fourmie == "180": fourmie_pos[0] = 0 if fourmie_pos [0] == nombre_case - 1 else fourmie_pos[0] + 1 # Down
-    if direction_fourmie == "90":  fourmie_pos[1] = 0 if fourmie_pos [1] == nombre_case - 1 else fourmie_pos[1] + 1 # Left
-    if direction_fourmie == "-90": fourmie_pos[1] = nombre_case - 1 if fourmie_pos [1] == 0 else fourmie_pos[1] - 1 # Right
+    if direction_fourmie == "0":     fourmie_pos[0] = nombre_case - 1 if fourmie_pos [0] == 0 else fourmie_pos[0] - 1 # Up
+    elif direction_fourmie == "180": fourmie_pos[0] = 0 if fourmie_pos [0] == nombre_case - 1 else fourmie_pos[0] + 1 # Down
+    elif direction_fourmie == "90":  fourmie_pos[1] = 0 if fourmie_pos [1] == nombre_case - 1 else fourmie_pos[1] + 1 # Left
+    elif direction_fourmie == "-90": fourmie_pos[1] = nombre_case - 1 if fourmie_pos [1] == 0 else fourmie_pos[1] - 1 # Right
 
-    # Met a jour le canvas et suvegarde
+    # Met a jour le canvas et suvegarde la case actuelle
     case_actuelle = field[fourmie_pos[0]][fourmie_pos[1]]
     field[fourmie_pos[0]][fourmie_pos[1]] = 3
     Canvas.create_rectangle(fourmie_pos[1] * (HEIGHT / nombre_case), fourmie_pos[0] * (WIDTH / nombre_case), (fourmie_pos[1] + 1) * (HEIGHT / nombre_case), (fourmie_pos[0] + 1) * (WIDTH / nombre_case), outline = "black", fill = "red")
@@ -106,15 +103,12 @@ def fourmie_update():
 
 
 def canvas_refresh():
-    '''Met a jour tout le canvas'''
+    '''Met a jour TOUT le canvas'''
     for y, line in enumerate(field):
         for x, cell in enumerate(line):
-            if cell == 1:
-                Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
-            if cell == 0:
-                Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
-            if cell == 3:
-                Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "red")
+            if cell == 1:   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
+            elif cell == 0: Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
+            elif cell == 3: Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "red")
 
 
 # ========== Tkinter GUI ==========
@@ -183,12 +177,9 @@ bouton_Charger.pack       (padx = 5, pady = 5, side = "right")
 
 # CANVAS CREATION / PACK:
 
-# création de la grille de base avec les cases apparantes
-# (HEIGHT/HAUTEUR)/nombre_case permet la création de case proportionnelle au Canvas
-
 Canvas = tk.Canvas(terrain_jeu_frame, height = HEIGHT, width = WIDTH, highlightthickness = 0, bg = "#1b1b1b")
 Canvas.pack (expand = 1, anchor = "center")
-canvas_refresh()
+canvas_refresh() # Affiche le canvas pour la premiere fois
 
 
 # ========== Raccourcis Clavier ==========
