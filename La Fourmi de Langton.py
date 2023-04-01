@@ -15,13 +15,13 @@ field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
 vitesse_jeu   = vitesses[0] # Vitesse du jeu
-directions    = ["0", "90", "180", "-90"]
+directions    = ["0", "90", "180", "-90"] # Durections de la fourmie
 comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
 
 fourmie_objs  = []
 fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2, nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
 
-for fourmie in fourmie_objs:
+for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
     field[fourmie["pos"][0]][fourmie["pos"][0]] = fourmie["sym"]
 
 # ========== FUNC ==========
@@ -54,10 +54,7 @@ def avancer(*args):
 
 def retour(*args):
     '''Fait retourner le jeu d'une unité de temps'''
-    #global case_actuelle, direction_fourmie
-
-    #if case_actuelle: direction_fourmie = directions[-1] if direction_fourmie == directions[0] else directions[directions.index(direction_fourmie) - 1]
-    #else:   fourmie_update
+    pass
 
 def start(*args):
     '''Fait tourner le jeu'''
