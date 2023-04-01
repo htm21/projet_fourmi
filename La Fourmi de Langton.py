@@ -4,24 +4,25 @@ from tkinter import filedialog
 from tkinter import colorchooser
 import time as t
 
+print("\033c")
+
 # ========== VAR ==========
 
+Running       = False
 HEIGHT, WIDTH = 700, 700 # Dimensions du canvas
-nombre_case   = 101 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
-field         = [[0 for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
+nombre_case   = 71 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
 vitesse_jeu   = vitesses[0] # Vitesse du jeu
-
-Running       = False
-fourmie_pos   = [nombre_case // 2, nombre_case // 2] # Position de la fourmie | [5, 3] = [y (ligne), x (colone)]
 directions    = ["0", "90", "180", "-90"]
-case_actuelle = 0 # Memoire de la cellule actuelle
+comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
 
-direction_fourmie = directions[0]
-field[nombre_case // 2][nombre_case // 2] = 3 # 3 c'est le symbol de la fourmie
+fourmie_objs  = []
+fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2, nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
 
-comportement = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"]
+for fourmie in fourmie_objs:
+    field[fourmie["pos"][0]][fourmie["pos"][0]] = fourmie["sym"]
 
 # ========== FUNC ==========
 
@@ -73,53 +74,62 @@ def pause():
     global Running
     Running = False
 
-def change_type_case(y, x):
+def change_type_case(fourmie, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
-    if case_actuelle == 0:
-        field[y][x] = 1
+    if fourmie["case_actuelle"] == "w":
+        field[y][x] = "b"
         Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
     else:
-        field[y][x] = 0
+        field[y][x] = "w"
         Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
 
 def fourmie_update():
     '''Met a jour le positionnement de la fourmie et les cases dans la liste "field" et canvas'''
-    global case_actuelle, direction_fourmie
+    global directions
 
-    # Change la directionde la fourmie
-    if case_actuelle: direction_fourmie = directions[-1] if direction_fourmie == directions[0] else directions[directions.index(direction_fourmie) - 1]
-    else:             direction_fourmie = directions[0] if direction_fourmie == directions[-1] else directions[directions.index(direction_fourmie) + 1]
+    for ant in fourmie_objs:
+        # Change la directionde la fourmie
+        if ant["case_actuelle"] == "b": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
+        else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
     
-    # Change la couleur de la case en fonction de sa couleur precedente 
-    change_type_case(*fourmie_pos)
+        # Change la couleur de la case en fonction de sa couleur precedente 
+        change_type_case(ant, *ant["pos"])
 
-    # Bouge la fourmie en fonction de son orientation
-    if direction_fourmie == "0":     fourmie_pos[0] = nombre_case - 1 if fourmie_pos [0] == 0 else fourmie_pos[0] - 1 # Up
-    elif direction_fourmie == "180": fourmie_pos[0] = 0 if fourmie_pos [0] == nombre_case - 1 else fourmie_pos[0] + 1 # Down
-    elif direction_fourmie == "90":  fourmie_pos[1] = 0 if fourmie_pos [1] == nombre_case - 1 else fourmie_pos[1] + 1 # Left
-    elif direction_fourmie == "-90": fourmie_pos[1] = nombre_case - 1 if fourmie_pos [1] == 0 else fourmie_pos[1] - 1 # Right
+        # Bouge la fourmie en fonction de son orientation
+        if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
+        elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
+        elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
+        elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
 
-    # Met a jour le canvas et suvegarde la case actuelle
-    case_actuelle = field[fourmie_pos[0]][fourmie_pos[1]]
-    field[fourmie_pos[0]][fourmie_pos[1]] = 3
-    Canvas.create_rectangle(fourmie_pos[1] * (HEIGHT / nombre_case), fourmie_pos[0] * (WIDTH / nombre_case), (fourmie_pos[1] + 1) * (HEIGHT / nombre_case), (fourmie_pos[0] + 1) * (WIDTH / nombre_case), outline = "black", fill = "red")
+        # Met a jour le canvas et suvegarde la case actuelle
+        ant["case_actuelle"] = fourmie_objs[field[ant["pos"][0]][ant["pos"][1]]]["case_actuelle"] if field[ant["pos"][0]][ant["pos"][1]] == int else field[ant["pos"][0]][ant["pos"][1]]
+        field[ant["pos"][0]][ant["pos"][1]] = ant["sym"]
+        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "black", fill = ant["couleur"])
+        Canvas.tag_bind(ant["obj"],"<Button-1>", cell_func)
+
     Canvas.update()
 
+def cell_func(*arg):
+    if Running: return
+
+    print("func passed")
 
 def canvas_refresh():
     '''Met a jour TOUT le canvas'''
     for y, line in enumerate(field):
         for x, cell in enumerate(line):
-            if cell == 1:   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
-            elif cell == 0: Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
-            elif cell == 3: Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "red")
+            if cell == "b":   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
+            elif cell == "w": Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
+            elif type(cell) == int:
+                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = fourmie_objs[cell]["couleur"])
+                Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", cell_func)
 
 def couleur_fourmi():
     #fourmi?.config(bg = colorchooser.askcolor()[1])           -----> En Développement
     pass
-# ========== Tkinter GUI ==========
 
-print("\033c")
+
+# ========== Tkinter GUI ==========
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
@@ -162,9 +172,9 @@ couleur_comportement.pack     (padx = 10, pady = 30, expand = 0, fill = "both")
 
 # BOUTTONS CREATION:
 
-bouton_Start          = tk.Button    (menu_du_haut_frame,       text = "Play",                            font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
-bouton_Pause          = tk.Button    (menu_du_haut_frame,       text = "Pause",                           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
-bouton_Quitter        = tk.Button    (menu_du_haut_frame,       text = "Quit",                            font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
+bouton_Start          = tk.Button    (menu_du_haut_frame,       text = "Play",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
+bouton_Pause          = tk.Button    (menu_du_haut_frame,       text = "Pause",                       font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
+bouton_Quitter        = tk.Button    (menu_du_haut_frame,       text = "Quit",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
 
 label_Texte           = tk.Label     (menu_titre_frame,         text = "Les Commandes Avancées",      font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")   
 bouton_Vitesse        = tk.Button    (vitesse_frame,            text = vitesse_jeu[1],                font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = changer_vitesse)
@@ -175,7 +185,7 @@ bouton_Charger        = tk.Button    (game_file_control,        text = "Charger"
 
 Label_Text2           = tk.Label     (menu_titre_PAPL,         text = "Les Pour allez plus loin",     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
 Bouton_fourmi2        = tk.Button    (couleur_comportement,    text = "+ Fourmi",           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = couleur_fourmi)
-ComboBox_Comportement = ttk.Combobox (couleur_comportement,               values = comportement)
+ComboBox_Comportement = ttk.Combobox (couleur_comportement,    values = comportement)
 
 # BOUTTONS PACK:
 
