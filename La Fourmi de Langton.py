@@ -9,7 +9,7 @@ print("\033c")
 # ========== VAR ==========
 
 Running       = False
-HEIGHT, WIDTH = 700, 700 # Dimensions du canvas
+HEIGHT, WIDTH = 900, 900 # Dimensions du canvas
 nombre_case   = 71 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
@@ -20,6 +20,8 @@ comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comp
 
 fourmie_objs  = []
 fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2, nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 1, "pos" : [nombre_case // 3, nombre_case // 3], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "blue", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_actuelle = None
 
 for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
     field[fourmie["pos"][0]][fourmie["pos"][0]] = fourmie["sym"]
@@ -71,6 +73,10 @@ def pause():
     global Running
     Running = False
 
+def change_menu(*args):
+    menu_lateral_fourmie.pack_forget()
+    menu_lateral_defaut.pack(fill = "y", expand = 1) 
+
 def change_type_case(fourmie, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
     if fourmie["case_actuelle"] == "w":
@@ -102,14 +108,15 @@ def fourmie_update():
         ant["case_actuelle"] = fourmie_objs[field[ant["pos"][0]][ant["pos"][1]]]["case_actuelle"] if field[ant["pos"][0]][ant["pos"][1]] == int else field[ant["pos"][0]][ant["pos"][1]]
         field[ant["pos"][0]][ant["pos"][1]] = ant["sym"]
         ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "black", fill = ant["couleur"])
-        Canvas.tag_bind(ant["obj"],"<Button-1>", cell_func)
+        Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
 
     Canvas.update()
 
-def cell_func(*arg):
+def fourmie_config(fourmie, *args):
     if Running: return
-
-    print("func passed")
+    menu_lateral_defaut.pack_forget()
+    menu_lateral_fourmie.pack(fill = "y", expand = 1)
+    label_fourmie.config(text = f"Fourmie: {fourmie['sym'] + 1}")
 
 def canvas_refresh():
     '''Met a jour TOUT le canvas'''
@@ -118,8 +125,8 @@ def canvas_refresh():
             if cell == "b":   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
             elif cell == "w": Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
             elif type(cell) == int:
-                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = fourmie_objs[cell]["couleur"])
-                Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", cell_func)
+                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
+                Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", lambda event, fourmie = fourmie_objs[cell]: fourmie_config(fourmie))
 
 def couleur_fourmi():
     #fourmi?.config(bg = colorchooser.askcolor()[1])           -----> En Développement
@@ -141,22 +148,25 @@ racine.protocol("WM_DELETE_WINDOW", quitter)
 
 # FRAMES CREATION:
 
-menu_du_haut_frame                 = tk.Frame (racine, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
-terrain_jeu_frame                  = tk.Frame (racine, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
-menu_lateral_frame                 = tk.Frame (racine, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+menu_du_haut             = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+menu_lateral             = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+menu_lateral_defaut      = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+menu_lateral_fourmie     = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+terrain_jeu_frame        = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 
-menu_titre_frame                   = tk.Frame (menu_lateral_frame, bg = "#1b1b1b")
-vitesse_frame                      = tk.Frame (menu_lateral_frame, bg = "#1b1b1b")
-controles_etat_jeu_frame           = tk.Frame (menu_lateral_frame, bg = "#1b1b1b")
-game_file_control                  = tk.Frame (menu_lateral_frame, bg = "#1b1b1b")
+menu_titre_frame         = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
+vitesse_frame            = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
+controles_etat_jeu_frame = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
+game_file_control        = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
 
-menu_titre_PAPL                    = tk.Frame (menu_lateral_frame, bg = "#1b1b1b")
-couleur_comportement               = tk.Frame (menu_lateral_frame, bg = "#1b1b1b")
+menu_titre_PAPL          = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
+couleur_comportement     = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
 
 # FRAMES PACK:
 
-menu_lateral_frame.pack       (anchor = "e", fill = "y",    expand = 0, side = "right")
-menu_du_haut_frame.pack       (anchor = "n", fill = "x",    expand = 0, side = "top")
+menu_lateral.pack             (anchor = "e", fill = "y",    expand = 0, side = "right")
+menu_lateral_defaut.pack      (anchor = "n", fill = "y",    expand = 1)
+menu_du_haut.pack             (anchor = "n", fill = "x",    expand = 0, side = "top")
 terrain_jeu_frame.pack        (anchor = "s", fill = "both", expand = 1, side = None)
 
 menu_titre_frame.pack         (padx = 10, pady = 30, expand = 0, fill = "both")
@@ -169,9 +179,9 @@ couleur_comportement.pack     (padx = 10, pady = 30, expand = 0, fill = "both")
 
 # BOUTTONS CREATION:
 
-bouton_Start          = tk.Button    (menu_du_haut_frame,       text = "Play",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
-bouton_Pause          = tk.Button    (menu_du_haut_frame,       text = "Pause",                       font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
-bouton_Quitter        = tk.Button    (menu_du_haut_frame,       text = "Quit",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
+bouton_Start          = tk.Button    (menu_du_haut,             text = "Play",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
+bouton_Pause          = tk.Button    (menu_du_haut,             text = "Pause",                       font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
+bouton_Quitter        = tk.Button    (menu_du_haut,             text = "Quit",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
 
 label_Texte           = tk.Label     (menu_titre_frame,         text = "Les Commandes Avancées",      font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")   
 bouton_Vitesse        = tk.Button    (vitesse_frame,            text = vitesse_jeu[1],                font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = changer_vitesse)
@@ -180,9 +190,12 @@ bouton_Avancer        = tk.Button    (controles_etat_jeu_frame, text = "Avancer"
 bouton_Sauvegarder    = tk.Button    (game_file_control,        text = "Sauvegarder",                 font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = sauvegarder)
 bouton_Charger        = tk.Button    (game_file_control,        text = "Charger",                     font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = charger)
 
-Label_Text2           = tk.Label     (menu_titre_PAPL,         text = "Les Pour allez plus loin",     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
-Bouton_fourmi2        = tk.Button    (couleur_comportement,    text = "+ Fourmi",           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = couleur_fourmi)
-ComboBox_Comportement = ttk.Combobox (couleur_comportement,    values = comportement)
+Label_Text2           = tk.Label     (menu_titre_PAPL,          text = "Les Pour allez plus loin",     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
+Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi",           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = couleur_fourmi)
+ComboBox_Comportement = ttk.Combobox (couleur_comportement,     values = comportement)
+
+label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                      font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
+retour_defaut_menu    = tk.Button    (menu_lateral_fourmie,     text = "X",                            font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = change_menu)
 
 # BOUTTONS PACK:
 
@@ -202,10 +215,14 @@ Label_Text2.pack           (padx = 5, pady = 5, side = "top")
 Bouton_fourmi2.pack        (padx = 5, pady = 5, side = "left")
 ComboBox_Comportement.pack (padx = 5, pady = 5, side = "right")
 
+label_fourmie.pack         (padx = 5, pady = 5, side = "top")
+retour_defaut_menu.pack    (padx = 5, pady = 5, side = "top")
+
+
 # CANVAS CREATION / PACK:
 
 Canvas = tk.Canvas(terrain_jeu_frame, height = HEIGHT, width = WIDTH, highlightthickness = 0, bg = "#1b1b1b")
-Canvas.pack                 (expand = 1, anchor = "center")
+Canvas.pack(expand = 1, anchor = "center")
 canvas_refresh() # Affiche le canvas pour la premiere fois
 
 
