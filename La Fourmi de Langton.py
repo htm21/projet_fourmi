@@ -15,7 +15,7 @@ field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
 vitesse_jeu   = vitesses[0] # Vitesse du jeu
-directions    = ["0", "90", "180", "-90"] # Durections de la fourmie
+directions    = ["0", "90", "180", "-90"] # Directions de la fourmie
 comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
 
 fourmie_objs  = []
