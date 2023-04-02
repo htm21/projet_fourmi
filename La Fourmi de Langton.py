@@ -20,7 +20,8 @@ comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comp
 
 fourmie_objs  = []
 fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2, nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 1, "pos" : [nombre_case // 3, nombre_case // 3], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "blue", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 1, "pos" : [nombre_case // 2, nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "blue", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+
 fourmie_actuelle = None
 
 for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
