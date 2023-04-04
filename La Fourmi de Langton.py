@@ -12,7 +12,7 @@ Running       = False
 steps         = 0
 total_steps   = 0
 HEIGHT, WIDTH = 900, 900 # Dimensions du canvas
-nombre_case   = 101 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 301 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
@@ -22,8 +22,10 @@ comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comp
 
 fourmie_objs  = []
 fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 3,nombre_case // 3], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "cyan", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 4,nombre_case // 4], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "purple", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 1, "pos" : [nombre_case // 3,nombre_case // 3], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "cyan", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 2, "pos" : [nombre_case // 4,nombre_case // 4], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "brown", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 3, "pos" : [nombre_case // 5,nombre_case // 5], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "pink", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 4, "pos" : [nombre_case // 6,nombre_case // 6], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "blue", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
 
 fourmie_actuelle = None
 
@@ -85,10 +87,10 @@ def change_type_case(fourmie, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
     if fourmie["case_actuelle"] == "w":
         field[y][x] = "b"
-        Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
+        Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "black")
     else:
         field[y][x] = "w"
-        Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
+        Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "white")
 
 def fourmie_update():
     '''Met a jour le positionnement de la fourmie et les cases dans la liste "field" et canvas'''
@@ -110,14 +112,14 @@ def fourmie_update():
 
         # Met a jour le canvas et suvegarde la case actuelle
         ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "black", fill = ant["couleur"])
+        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "", fill = ant["couleur"])
         # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
         Canvas.update()
     
     total_steps += 1
     steps       += 1
     
-    if steps > 5000:
+    if steps > 1000:
         canvas_refresh()
         steps = 0
          
@@ -136,10 +138,10 @@ def canvas_refresh():
     Canvas.delete("all")
     for y, line in enumerate(field):
         for x, cell in enumerate(line):
-            if cell == "b":   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
-            elif cell == "w": Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "white")
+            if cell == "b":   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "black")
+            elif cell == "w": Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "white")
             elif type(cell) == int:
-                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
+                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
                 Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", lambda event, fourmie = fourmie_objs[cell]: fourmie_config(fourmie))
 
 def couleur_fourmi():
