@@ -9,8 +9,10 @@ print("\033c")
 # ========== VAR ==========
 
 Running       = False
+steps         = 0
+total_steps   = 0
 HEIGHT, WIDTH = 900, 900 # Dimensions du canvas
-nombre_case   = 71 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 101 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
@@ -19,13 +21,14 @@ directions    = ["0", "90", "180", "-90"] # Directions de la fourmie
 comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
 
 fourmie_objs  = []
-fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2, nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 1, "pos" : [nombre_case // 2, nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "blue", "obj" : None}) # l'object/tuple fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 3,nombre_case // 3], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "cyan", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 4,nombre_case // 4], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "purple", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
 
 fourmie_actuelle = None
 
 for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
-    field[fourmie["pos"][0]][fourmie["pos"][0]] = fourmie["sym"]
+    field[fourmie["pos"][0]][fourmie["pos"][1]] = fourmie["sym"]
 
 # ========== FUNC ==========
 
@@ -76,7 +79,7 @@ def pause():
 
 def change_menu(*args):
     menu_lateral_fourmie.pack_forget()
-    menu_lateral_defaut.pack(fill = "y", expand = 1) 
+    menu_lateral_defaut.pack(fill = "y", expand = 1)
 
 def change_type_case(fourmie, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
@@ -89,7 +92,7 @@ def change_type_case(fourmie, y, x):
 
 def fourmie_update():
     '''Met a jour le positionnement de la fourmie et les cases dans la liste "field" et canvas'''
-    global directions
+    global directions, steps, total_steps 
 
     for ant in fourmie_objs:
         # Change la directionde la fourmie
@@ -106,12 +109,20 @@ def fourmie_update():
         elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
 
         # Met a jour le canvas et suvegarde la case actuelle
-        ant["case_actuelle"] = fourmie_objs[field[ant["pos"][0]][ant["pos"][1]]]["case_actuelle"] if field[ant["pos"][0]][ant["pos"][1]] == int else field[ant["pos"][0]][ant["pos"][1]]
-        field[ant["pos"][0]][ant["pos"][1]] = ant["sym"]
+        ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
         ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "black", fill = ant["couleur"])
-        Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
-
-    Canvas.update()
+        # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
+        Canvas.update()
+    
+    total_steps += 1
+    steps       += 1
+    
+    if steps > 5000:
+        canvas_refresh()
+        steps = 0
+         
+    
+    
 
 def fourmie_config(fourmie, *args):
     if Running: return
@@ -119,8 +130,10 @@ def fourmie_config(fourmie, *args):
     menu_lateral_fourmie.pack(fill = "y", expand = 1)
     label_fourmie.config(text = f"Fourmie: {fourmie['sym'] + 1}")
 
+
 def canvas_refresh():
     '''Met a jour TOUT le canvas'''
+    Canvas.delete("all")
     for y, line in enumerate(field):
         for x, cell in enumerate(line):
             if cell == "b":   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "black", fill = "black")
@@ -150,10 +163,12 @@ racine.protocol("WM_DELETE_WINDOW", quitter)
 # FRAMES CREATION:
 
 menu_du_haut             = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+terrain_jeu_frame        = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+
 menu_lateral             = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 menu_lateral_defaut      = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 menu_lateral_fourmie     = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
-terrain_jeu_frame        = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+
 
 menu_titre_frame         = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
 vitesse_frame            = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
@@ -166,7 +181,7 @@ couleur_comportement     = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
 # FRAMES PACK:
 
 menu_lateral.pack             (anchor = "e", fill = "y",    expand = 0, side = "right")
-menu_lateral_defaut.pack      (anchor = "n", fill = "y",    expand = 1)
+menu_lateral_defaut.pack      (anchor = "n", fill = "y",    expand = 1, side = None)
 menu_du_haut.pack             (anchor = "n", fill = "x",    expand = 0, side = "top")
 terrain_jeu_frame.pack        (anchor = "s", fill = "both", expand = 1, side = None)
 
@@ -191,12 +206,12 @@ bouton_Avancer        = tk.Button    (controles_etat_jeu_frame, text = "Avancer"
 bouton_Sauvegarder    = tk.Button    (game_file_control,        text = "Sauvegarder",                 font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = sauvegarder)
 bouton_Charger        = tk.Button    (game_file_control,        text = "Charger",                     font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = charger)
 
-Label_Text2           = tk.Label     (menu_titre_PAPL,          text = "Les Pour allez plus loin",     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
-Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi",           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = couleur_fourmi)
+Label_Text2           = tk.Label     (menu_titre_PAPL,          text = "Les Pour allez plus loin",    font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
+Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = couleur_fourmi)
 ComboBox_Comportement = ttk.Combobox (couleur_comportement,     values = comportement)
 
-label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                      font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
-retour_defaut_menu    = tk.Button    (menu_lateral_fourmie,     text = "X",                            font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = change_menu)
+label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
+retour_defaut_menu    = tk.Button    (menu_lateral_fourmie,     text = "X",                           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = change_menu)
 
 # BOUTTONS PACK:
 
