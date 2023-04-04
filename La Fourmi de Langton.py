@@ -12,7 +12,7 @@ Running       = False
 steps         = 0
 total_steps   = 0
 HEIGHT, WIDTH = 900, 900 # Dimensions du canvas
-nombre_case   = 301 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 201 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
