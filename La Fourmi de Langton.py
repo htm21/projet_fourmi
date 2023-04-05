@@ -12,7 +12,7 @@ Running       = False
 steps         = 0
 total_steps   = 0
 HEIGHT, WIDTH = 900, 900 # Dimensions du canvas
-nombre_case   = 201 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 51 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
@@ -22,10 +22,6 @@ comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comp
 
 fourmie_objs  = []
 fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 1, "pos" : [nombre_case // 3,nombre_case // 3], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "cyan", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 2, "pos" : [nombre_case // 4,nombre_case // 4], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "brown", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 3, "pos" : [nombre_case // 5,nombre_case // 5], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "pink", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 4, "pos" : [nombre_case // 6,nombre_case // 6], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "blue", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
 
 fourmie_actuelle = None
 
