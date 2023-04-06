@@ -256,6 +256,8 @@ racine.bind("<Control-l>",     charger)
 # ========== Autres ==========
 
 ComboBox_Comportement.set("Teste d'autres directions !")
+Logo = tk.PhotoImage(file="//Users//Ahmad//Desktop//UNI - UVSQ//L1 BI//S2//projet_fourmi//icon.png")
+racine.iconphoto(False, Logo)
 
 
 racine.mainloop()
