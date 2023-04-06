@@ -11,9 +11,11 @@ print("\033c")
 Running       = False
 steps         = 0
 total_steps   = 0
-HEIGHT, WIDTH = 900, 900 # Dimensions du canvas
-nombre_case   = 201 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+Height, Width = 900, 900 # Dimensions du canvas
+nombre_case   = 101 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
+grid_l_types  = ["", "black"]
+Grid_Line     = grid_l_types[1]
 
 vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
 vitesse_jeu   = vitesses[0] # Vitesse du jeu
@@ -79,18 +81,46 @@ def pause():
     global Running
     Running = False
 
+def tk_key_control(event):
+    if event.char == "g":
+        toggle_grid_lines()
+
 def change_menu(*args):
     menu_lateral_fourmie.pack_forget()
     menu_lateral_defaut.pack(fill = "y", expand = 1)
+
+def zoom_canvas(event):
+    '''Zooms in or out of the canvas for better visability'''
+    global Width, Height
+    if event.num == 4 or event.delta == 120: # Zoom In Canvas
+        if Canvas.winfo_width() >= terrain_jeu_frame.winfo_width() or Canvas.winfo_height() >= terrain_jeu_frame.winfo_height():
+            print("here")
+            Width, Height = terrain_jeu_frame.winfo_width(), terrain_jeu_frame.winfo_height()
+        else: 
+            Width += 50; Height += 50  
+    elif event.num == 5 or event.delta == -120: # Zoom Out Canvas
+        if Canvas.winfo_width() <= nombre_case or Canvas.winfo_height() <= nombre_case:
+            Width, Height = nombre_case, nombre_case
+        else:
+            Width -= 50; Height -= 50
+    
+    Canvas.configure(width = Width, height = Height)
+    canvas_refresh()
+
+def toggle_grid_lines():
+    global Grid_Line
+    Grid_Line = grid_l_types[0] if Grid_Line == grid_l_types[-1] else grid_l_types[grid_l_types.index(Grid_Line) + 1] 
+    Canvas.update()
+    canvas_refresh()
 
 def change_type_case(fourmie, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
     if fourmie["case_actuelle"] == "w":
         field[y][x] = "b"
-        Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "black")
+        Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = grid_line, fill = "black")
     else:
         field[y][x] = "w"
-        Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "white")
+        Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = grid_line, fill = "white")
 
 def fourmie_update():
     '''Met a jour le positionnement de la fourmie et les cases dans la liste "field" et canvas'''
@@ -112,7 +142,7 @@ def fourmie_update():
 
         # Met a jour le canvas et suvegarde la case actuelle
         ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "", fill = ant["couleur"])
+        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = grid_line, fill = ant["couleur"])
         # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
         Canvas.update()
     
@@ -138,10 +168,10 @@ def canvas_refresh():
     Canvas.delete("all")
     for y, line in enumerate(field):
         for x, cell in enumerate(line):
-            if cell == "b":   Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "black")
-            elif cell == "w": Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = "white")
+            if cell == "b":   Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
+            elif cell == "w": Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
             elif type(cell) == int:
-                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (HEIGHT / nombre_case), y * (WIDTH / nombre_case), (x + 1) * (HEIGHT / nombre_case), (y + 1) * (WIDTH / nombre_case), outline = "", fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
+                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
                 Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", lambda event, fourmie = fourmie_objs[cell]: fourmie_config(fourmie))
 
 def couleur_fourmi():
@@ -239,23 +269,26 @@ retour_defaut_menu.pack    (padx = 5, pady = 5, side = "top")
 
 # CANVAS CREATION / PACK:
 
-Canvas = tk.Canvas(terrain_jeu_frame, height = HEIGHT, width = WIDTH, highlightthickness = 0, bg = "#1b1b1b")
+Canvas = tk.Canvas(terrain_jeu_frame, height = Height, width = Width, highlightthickness = 0, bg = "#1b1b1b")
 Canvas.pack(expand = 1, anchor = "center")
 canvas_refresh() # Affiche le canvas pour la premiere fois
 
 
 # ========== Raccourcis Clavier ==========
 
-racine.bind('<Escape>',        quitter)
-racine.bind("<space>",         start)
+racine.bind('<Escape>',    quitter)
+racine.bind("<space>",     start)
 
-racine.bind("<Tab>",           changer_vitesse)
+racine.bind("<Tab>",       changer_vitesse)
 
-racine.bind("<Right>",         avancer)
-racine.bind("<Left>",          retour)
+racine.bind("<Right>",     avancer)
+racine.bind("<Left>",      retour)
 
-racine.bind("<Control-s>",     sauvegarder)
-racine.bind("<Control-l>",     charger)
+racine.bind("<Control-s>", sauvegarder)
+racine.bind("<Control-l>", charger)
+
+racine.bind("<MouseWheel>", zoom_canvas)
+racine.bind("<KeyPress>",   tk_key_control)
 
 # ========== Autres ==========
 
