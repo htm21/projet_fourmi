@@ -117,14 +117,14 @@ def change_type_case(fourmie, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
     if fourmie["case_actuelle"] == "w":
         field[y][x] = "b"
-        Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = grid_line, fill = "black")
+        Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
     else:
         field[y][x] = "w"
-        Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = grid_line, fill = "white")
+        Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
 
 def fourmie_update():
     '''Met a jour le positionnement de la fourmie et les cases dans la liste "field" et canvas'''
-    global directions, steps, total_steps 
+    global directions, steps, total_steps, Grid_Line 
 
     for ant in fourmie_objs:
         # Change la directionde la fourmie
@@ -142,7 +142,7 @@ def fourmie_update():
 
         # Met a jour le canvas et suvegarde la case actuelle
         ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = grid_line, fill = ant["couleur"])
+        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = ant["couleur"])
         # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
         Canvas.update()
     
