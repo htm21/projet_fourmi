@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import colorchooser
 import time as t
+import os
 
 print("\033c")
 
@@ -58,7 +59,8 @@ def avancer(*args):
 
 def retour(*args):
     '''Fait retourner le jeu d'une unité de temps'''
-    pass
+    if Running: pass
+    else : not fourmie_update()
 
 def start(*args):
     '''Fait tourner le jeu'''
@@ -256,8 +258,14 @@ racine.bind("<Control-l>",     charger)
 # ========== Autres ==========
 
 ComboBox_Comportement.set("Teste d'autres directions !")
-Logo = tk.PhotoImage(file="//Users//Ahmad//Desktop//UNI - UVSQ//L1 BI//S2//projet_fourmi//icon.png")
-racine.iconphoto(False, Logo)
+#Logo = tk.PhotoImage(file="//Users//Ahmad//Desktop//UNI - UVSQ//L1 BI//S2//projet_fourmi//icon.png")
+#racine.iconphoto(False, Logo)
+
+dirname = os.path.dirname(__file__)
+image_path = os.path.join(dirname, "ICONS", "logo.png")                     #https://stackoverflow.com/questions/61485360/opening-a-file-from-other-directory-in-python
+logo = tk.PhotoImage(file=image_path)
+racine.iconphoto(False, logo)
+
 
 
 racine.mainloop()
