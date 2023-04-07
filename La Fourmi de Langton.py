@@ -54,44 +54,8 @@ def sauvegarder(*args):
 
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
-    if Running: pass
+    if Running: return
     else: fourmie_update()
-
-def retour(*args):
-    '''Fait retourner le jeu d'une unité de temps'''
-    global directions, steps, total_steps
-
-    if Running: pass
-    elif total_steps == 0 and steps == 0 : pass
-    else : 
-        for ant in fourmie_objs:
-        
-            change_type_case(ant, *ant["pos"])
-            
-            if ant["case_actuelle"] == "b":
-                if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] + 1 # Up
-                elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] - 1 # Down
-                elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] - 1 # Left
-                elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] + 1 # Right
-            else :
-                if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
-                elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
-                elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
-                elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
-            
-            if ant["case_actuelle"] == "b": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
-            else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
-           
-            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-            ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "", fill = ant["couleur"])
-            
-            Canvas.update()
-        
-        total_steps -= 1
-        steps -= 1
-        if steps < 0 :
-            canvas_refresh()
-            steps=0
 
 
 def start(*args):
@@ -146,14 +110,39 @@ def fourmie_update():
         # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
         Canvas.update()
     
-    total_steps += 1
-    steps       += 1
-    
-    if steps > 1000:
-        canvas_refresh()
-        steps = 0
+    total_steps += 1; steps += 1
+    if steps > 1000: canvas_refresh(); steps = 0
          
-    
+def retour(*args):
+    '''Fait retourner le jeu d'une unité de temps'''
+    global directions, steps, total_steps
+
+    if Running or steps == 0: return
+    else : 
+        for ant in fourmie_objs:
+        
+            change_type_case(ant, *ant["pos"])
+            
+            if ant["case_actuelle"] == "b":
+                if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] + 1 # Up
+                elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] - 1 # Down
+                elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] - 1 # Left
+                elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] + 1 # Right
+            else :
+                if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
+                elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
+                elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
+                elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
+            
+            if ant["case_actuelle"] == "b": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
+            else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
+           
+            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
+            ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "", fill = ant["couleur"])
+            
+            Canvas.update()
+        
+        steps -= 1
     
 
 def fourmie_config(fourmie, *args):
