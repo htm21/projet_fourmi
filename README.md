@@ -1,6 +1,7 @@
 [Sujet_fourmi.pdf](https://github.com/uvsq22202060/projet_fourmi/files/10853209/Sujet_fourmi.pdf)
 # *La Fourmi de Langton, un projet de Licence Informatique*
 
+
 **GROUPE DE TD : BI - TD02**
 \
 \
@@ -9,3 +10,6 @@ Ahmad HATOUM (22202060) - Francesco DI Gennaro (22205989) - Daniel KEBBOUS (2220
 \
 \
 URL DE DÉPÔT DU PROJET : https://github.com/uvsq22202060/projet_fourmi
+
+
+# @Jean_Tshibangu : ATTENTION : *Merci d'ajouter les objectifs du projet + Les différentes étapes de votre projet *
