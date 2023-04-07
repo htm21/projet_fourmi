@@ -92,6 +92,7 @@ def change_menu(*args):
 def zoom_canvas(event):
     '''Zooms in or out of the canvas for better visability'''
     global Width, Height
+    
     if event.num == 4 or event.delta == 120: # Zoom In Canvas
         if Canvas.winfo_width() >= terrain_jeu_frame.winfo_width() or Canvas.winfo_height() >= terrain_jeu_frame.winfo_height():
             print("here")
@@ -185,12 +186,7 @@ racine = tk.Tk()
 racine.title("La Fourmi de Langton")
 racine.state("zoomed")
 racine.protocol("WM_DELETE_WINDOW", quitter)
-
-# width, height = 1280, 720
-# screen_width  = racine.winfo_screenwidth()
-# screen_height = racine.winfo_screenheight()
-# x, y          = (screen_width / 2) - (width / 2), (screen_height / 2) - (height / 2)
-# racine.geometry('%dx%d+%d+%d' % (width, height, x, y))
+racine.minsize(1280,720)
 
 # FRAMES CREATION:
 
