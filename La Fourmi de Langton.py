@@ -62,6 +62,7 @@ def retour(*args):
     global directions, steps, total_steps
 
     if Running: pass
+    elif total_steps == 0 and steps == 0 : pass
     else : 
         for ant in fourmie_objs:
         
