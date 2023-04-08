@@ -13,7 +13,7 @@ URL DE DÉPÔT DU PROJET : https://github.com/uvsq22202060/projet_fourmi
 
 # Les Objectifs du projet
 
-L'objectif de ce projet repose sur la création de *"La Fourmi de Langton"*, un automate cellulaire qui se déplace sur une grille (créée manuellement grâce au module *Tkinter* ) en fonction de paramètre précis, la couleur de la cellule, les différentes règles du projet son exposé dans le wiki suivant : https://github.com/uvsq22202060/projet_fourmi/wiki/Principe-et-description-de-l'automate-de-la-fourmille-de-langton.
+L'objectif de ce projet repose sur la création de *"La Fourmi de Langton"*, un automate cellulaire qui se déplace sur une grille (créée manuellement grâce au module *Tkinter* ) en fonction de paramètre précis, la couleur de la cellule, les différentes règles du projet sont exposées dans le wiki du projet : https://github.com/uvsq22202060/projet_fourmi/wiki/Principe-et-description-de-l'automate-de-la-fourmille-de-langton.
 
 # Les Différentes Étapes de notre projet
 
