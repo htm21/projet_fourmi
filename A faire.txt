@@ -1,11 +1,9 @@
 Choses a faire:
 
 1) La fonction retour 
-2) Les fonctions charger | sauvegarder
-3) Rajouter plusieurs fourmies au terrain | pouvoir choisir la couleur de la fourmie (avec colorchooser : from tkinter import colorchooser) ⏳
+3) Pouvoir choisir la couleur de la fourmie (avec colorchooser : from tkinter import colorchooser) ⏳
 4) Rajouter differantes interactions pour les cases | Menu pour inserer les commandes comme: "GDDG" (avec ComboBox) ⏳
 5) Rajouter des icones au lieu du texte
-6) Rajouter une icone a programme 
 7) Uniformiser le code
 8) Convertir le programme en executable (.exe)
 9) Ajouter un bouton cliquable qui pourrait renvoyer sur une autre fenêtre contenant les règles du jeu ? (avec deux .mainloop())

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import colorchooser
+import json
 import time as t
 
 print("\033c")
@@ -12,7 +13,7 @@ Running       = False
 steps         = 0
 total_steps   = 0
 Height, Width = 900, 900 # Dimensions du canvas
-nombre_case   = 101 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case   = 100 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
 grid_l_types  = ["", "black"]
 Grid_Line     = grid_l_types[1]
@@ -23,11 +24,7 @@ directions    = ["0", "90", "180", "-90"] # Directions de la fourmie
 comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
 
 fourmie_objs  = []
-fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 1, "pos" : [nombre_case // 3,nombre_case // 3], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "cyan", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 2, "pos" : [nombre_case // 4,nombre_case // 4], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "brown", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 3, "pos" : [nombre_case // 5,nombre_case // 5], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "pink", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-fourmie_objs.append({"sym" : 4, "pos" : [nombre_case // 6,nombre_case // 6], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "blue", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
 
 fourmie_actuelle = None
 
@@ -50,12 +47,28 @@ def changer_vitesse(*args):
 
 def charger(*args):
     '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
-    file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name
+    global fourmie_objs, field, total_steps, steps, nombre_case
+    fichier = filedialog.askopenfilename(title = "Charger une partie", filetypes = (('Text Document', '*.txt'),("Tous les fichiers", "*.*")))
+    if fichier:
+        with open(fichier, "r") as f:
+            save_file = f.read().replace("'", '"')
+
+            fourmie_objs = json.loads(save_file[save_file.index("Fourmies\n\n") + len("Fourmies\n\n") : save_file.index("\n\n// Etat")])
+            field        = json.loads(save_file[save_file.index("Terrain\n\n") + len("Terrain\n\n") : save_file.index("\n\n// Variables")])
+            steps, total_steps , nombre_case = json.loads(save_file[save_file.index("Variables\n\n") + len("Variables\n\n") : save_file.index("\n\nEnd")])
+
+        Canvas.update(); canvas_refresh()
 
 def sauvegarder(*args): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
     fichier = [('Text Document', '*.txt')]
-    fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
+    fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier).name
+    if fichier:
+        with open(fichier, "w") as f:
+            f.write(f"// Object Fourmies\n\n{fourmie_objs}\n\n")
+            f.write(f"// Etat du Terrain\n\n{field}\n\n")
+            f.write(f"// Variables\n\n{[steps, total_steps, nombre_case]}\n\nEnd")
+    
 
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
@@ -82,6 +95,7 @@ def pause():
     Running = False
 
 def tk_key_control(event):
+    '''Takes control of Keyboard Input'''
     if event.char == "g":
         toggle_grid_lines()
 
@@ -108,10 +122,10 @@ def zoom_canvas(event):
     canvas_refresh()
 
 def toggle_grid_lines():
+    '''Toggles the grid lines of the Canvas'''
     global Grid_Line
     Grid_Line = grid_l_types[0] if Grid_Line == grid_l_types[-1] else grid_l_types[grid_l_types.index(Grid_Line) + 1] 
-    Canvas.update()
-    canvas_refresh()
+    Canvas.update(); canvas_refresh()
 
 def change_type_case(fourmie, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''

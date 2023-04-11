@@ -24,8 +24,6 @@ comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comp
 fourmie_objs  = []
 fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "func" : None, "case_actuelle" : "w", "couleur" : "red", "obj" : None}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
 
-fourmie_actuelle = None
-
 for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
     field[fourmie["pos"][0]][fourmie["pos"][1]] = fourmie["sym"]
 
@@ -56,7 +54,6 @@ def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
     if Running: return
     else: fourmie_update()
-
 
 def start(*args):
     '''Fait tourner le jeu'''
@@ -89,27 +86,27 @@ def change_type_case(fourmie, y, x):
 def fourmie_update():
     '''Met a jour le positionnement de la fourmie et les cases dans la liste "field" et canvas'''
     global directions, steps, total_steps 
+    if fourmie_objs:
+        for ant in fourmie_objs:
+            # Change la directionde la fourmie
+            if ant["case_actuelle"] == "b": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
+            else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
+        
+            # Change la couleur de la case en fonction de sa couleur precedente 
+            change_type_case(ant, *ant["pos"])
 
-    for ant in fourmie_objs:
-        # Change la directionde la fourmie
-        if ant["case_actuelle"] == "b": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
-        else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
-    
-        # Change la couleur de la case en fonction de sa couleur precedente 
-        change_type_case(ant, *ant["pos"])
+            # Bouge la fourmie en fonction de son orientation
+            if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
+            elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
+            elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
+            elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
 
-        # Bouge la fourmie en fonction de son orientation
-        if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
-        elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
-        elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
-        elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
-
-        # Met a jour le canvas et suvegarde la case actuelle
-        ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-        ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "", fill = ant["couleur"])
-        # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
-        Canvas.update()
-    
+            # Met a jour le canvas et suvegarde la case actuelle
+            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
+            ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "", fill = ant["couleur"])
+            # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
+            Canvas.update()
+    else: return
     total_steps += 1; steps += 1
     if steps > 1000: canvas_refresh(); steps = 0
          
@@ -175,11 +172,11 @@ racine.title("La Fourmi de Langton")
 racine.state("zoomed")
 racine.protocol("WM_DELETE_WINDOW", quitter)
 
-# width, height = 1280, 720
-# screen_width  = racine.winfo_screenwidth()
-# screen_height = racine.winfo_screenheight()
-# x, y          = (screen_width / 2) - (width / 2), (screen_height / 2) - (height / 2)
-# racine.geometry('%dx%d+%d+%d' % (width, height, x, y))
+dirname    = os.path.dirname(__file__)
+image_path = os.path.join(dirname, "ICONS", "logo.png")                     #https://stackoverflow.com/questions/61485360/opening-a-file-from-other-directory-in-python
+logo       = tk.PhotoImage(file=image_path)
+racine.iconphoto(True, logo)
+
 
 # FRAMES CREATION:
 
@@ -279,14 +276,6 @@ racine.bind("<Control-l>",     charger)
 # ========== Autres ==========
 
 ComboBox_Comportement.set("Teste d'autres directions !")
-#Logo = tk.PhotoImage(file="//Users//Ahmad//Desktop//UNI - UVSQ//L1 BI//S2//projet_fourmi//icon.png")
-#racine.iconphoto(False, Logo)
-
-dirname = os.path.dirname(__file__)
-image_path = os.path.join(dirname, "ICONS", "logo.png")                     #https://stackoverflow.com/questions/61485360/opening-a-file-from-other-directory-in-python
-logo = tk.PhotoImage(file=image_path)
-racine.iconphoto(False, logo)
-
 
 
 racine.mainloop()
