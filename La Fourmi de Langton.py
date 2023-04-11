@@ -177,6 +177,7 @@ image_path = os.path.join(dirname, "ICONS", "logo.png")                     #htt
 logo       = tk.PhotoImage(file=image_path)
 racine.iconphoto(True, logo)
 
+racine.minsize(1280,720)
 
 # FRAMES CREATION:
 
