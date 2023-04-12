@@ -49,6 +49,7 @@ def sauvegarder(*args):
     '''Ouvre une fenetre pour savegarder la parie en cours'''
     fichier = [('Text Document', '*.txt')]
     fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
+    #test
 
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
