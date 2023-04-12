@@ -118,25 +118,12 @@ def retour(*args):
     if Running or steps == 0: return
     else : 
         for ant in fourmie_objs:
+
+            if ant["direction"] == "90" :   ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1
+            elif ant["direction"] == "180":   ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 
+            elif ant["direction"] == "-90":   ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] + 1 
+            elif ant["direction"] == "O":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] + 1
         
-            change_type_case(ant, *ant["pos"])
-            
-            if ant["case_actuelle"] == "b":
-                if ant["direction"] == "0":     ant["direction"] == "-90" ; ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] + 1 # Up
-                elif ant["direction"] == "180": ant["direction"] == "90" ; ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
-                elif ant["direction"] == "90":  ant["direction"] == "0" ;  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] - 1 # Left
-                elif ant["direction"] == "-90": ant["direction"] == "180" ; ant["pos"][0] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
-            else :
-                if ant["direction"] == "0":     ant["direction"] == "90" ; ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] + 1 # Up
-                elif ant["direction"] == "180": ant["direction"] == "-90" ; ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
-                elif ant["direction"] == "90":  ant["direction"] == "180" ; ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] - 1 # Left
-                elif ant["direction"] == "-90": ant["direction"] == "0" ; ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
-            
-            if ant["case_actuelle"] == "b": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
-            else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
-           
-            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-            ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (HEIGHT / nombre_case), ant["pos"][0] * (WIDTH / nombre_case), (ant["pos"][1] + 1) * (HEIGHT / nombre_case), (ant["pos"][0] + 1) * (WIDTH / nombre_case), outline = "", fill = ant["couleur"])
             
             Canvas.update()
         
