@@ -119,10 +119,7 @@ def retour(*args):
     else : 
         for ant in fourmie_objs:
 
-            if ant["direction"] == "90" :   ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1
-            elif ant["direction"] == "180":   ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 
-            elif ant["direction"] == "-90":   ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] + 1 
-            elif ant["direction"] == "O":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] + 1
+            #a faire
         
             
             Canvas.update()
