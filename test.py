@@ -1,9 +1,9 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter import colorchooser
-import json
 import time as t
+from tkinter import ttk, filedialog, colorchooser
+import ctypes
+import json
+
 
 print("\033c")
 
@@ -36,12 +36,14 @@ for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
 def quitter(*args):
     '''Ferme le programme'''
     global Running
+    
     if Running: Running = False
     racine.destroy()
 
 def changer_vitesse(*args):
     '''Change la vitesse du jeu'''
     global vitesses, vitesse_jeu
+    
     vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
     bouton_Vitesse.config(text = vitesse_jeu[1])
 
@@ -82,6 +84,7 @@ def retour(*args):
 def start(*args):
     '''Fait tourner le jeu'''
     global Running
+    
     if Running: Running = False
     else:
         Running = True
@@ -112,15 +115,14 @@ def zoom_canvas(event):
             print("here")
             Width, Height = terrain_jeu_frame.winfo_width(), terrain_jeu_frame.winfo_height()
         else: 
-            Width += 50; Height += 50  
+            Width += 100; Height += 100  
     elif event.num == 5 or event.delta == -120: # Zoom Out Canvas
         if Canvas.winfo_width() <= nombre_case or Canvas.winfo_height() <= nombre_case:
             Width, Height = nombre_case, nombre_case
         else:
-            Width -= 50; Height -= 50
+            Width -= 100; Height -= 100
     
-    Canvas.configure(width = Width, height = Height)
-    canvas_refresh()
+    Canvas.configure(width = Width, height = Height); canvas_refresh()
 
 def toggle_grid_lines():
     '''Toggles the grid lines of the Canvas'''
@@ -150,7 +152,7 @@ def fourmie_update():
         change_type_case(ant, *ant["pos"])
 
         # Bouge la fourmie en fonction de son orientation
-        if ant["direction"] == "0":     ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
+        if   ant["direction"] == "0":   ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
         elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
         elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
         elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
@@ -161,17 +163,13 @@ def fourmie_update():
         # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
         Canvas.update()
     
-    total_steps += 1
-    steps       += 1
-    
-    if steps > 1000:
-        canvas_refresh()
-        steps = 0
-         
-    
+    total_steps += 1; steps += 1
+    if steps > 1000: canvas_refresh(); steps = 0
     
 
 def fourmie_config(fourmie, *args):
+    '''Opens a configuration window for the ant object'''
+
     if Running: return
     menu_lateral_defaut.pack_forget()
     menu_lateral_fourmie.pack(fill = "y", expand = 1)
@@ -189,12 +187,22 @@ def canvas_refresh():
                 fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
                 Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", lambda event, fourmie = fourmie_objs[cell]: fourmie_config(fourmie))
 
-def couleur_fourmi():
-    #fourmi?.config(bg = colorchooser.askcolor()[1])           -----> En Développement
+def reset_field(*args):
+    '''Resets the field with no ants'''
+    global Running, field, fourmie_objs
+
+    Running = False
+    Canvas.delete("all")
+    field = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)]
+    fourmie_objs = []
+    canvas_refresh()
+
+def ajout_fourmie(*args):
     pass
 
-
 # ========== Tkinter GUI ==========
+
+ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
@@ -249,7 +257,7 @@ bouton_Sauvegarder    = tk.Button    (game_file_control,        text = "Sauvegar
 bouton_Charger        = tk.Button    (game_file_control,        text = "Charger",                     font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = charger)
 
 Label_Text2           = tk.Label     (menu_titre_PAPL,          text = "Les Pour allez plus loin",    font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
-Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = couleur_fourmi)
+Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = ajout_fourmie)
 ComboBox_Comportement = ttk.Combobox (couleur_comportement,     values = comportement)
 
 label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
@@ -299,7 +307,7 @@ racine.bind("<Control-l>", charger)
 
 racine.bind("<MouseWheel>", zoom_canvas)
 racine.bind("<KeyPress>",   tk_key_control)
-
+racine.bind("<BackSpace>", reset_field)
 # ========== Autres ==========
 
 ComboBox_Comportement.set("Teste d'autres directions !")
