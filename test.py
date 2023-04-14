@@ -10,6 +10,7 @@ print("\033c")
 # ========== VAR ==========
 
 Running       = False
+create_window = False
 steps         = 0
 total_steps   = 0
 Height, Width = 900, 900 # Dimensions du canvas
@@ -198,7 +199,19 @@ def reset_field(*args):
     canvas_refresh()
 
 def ajout_fourmie(*args):
-    pass
+
+    fourmie_create_window = tk.Tk()
+    width, height = 800, 600
+    screen_width, screen_height  = racine.winfo_screenwidth(), racine.winfo_screenheight()
+    x, y = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
+    fourmie_create_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+    fourmie_create_window.resizable(False,False)
+    fourmie_create_window.overrideredirect(True)
+    
+    exitbutton = tk.Button(fourmie_create_window, relief = "flat", text = "X", command = fourmie_create_window.destroy).pack(ipadx = 10, ipady = 0, side = "right", anchor = "n")
+
+    fourmie_create_window.mainloop()
+
 
 # ========== Tkinter GUI ==========
 
