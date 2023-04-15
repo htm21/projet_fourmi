@@ -20,7 +20,7 @@ vitesse_jeu    = vitesses[0] # Vitesse du jeu
 directions     = ["0", "90", "180", "-90"] # Directions de la fourmie
 comportement   = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
 
-fourmie_objs   = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}] # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
+fourmie_objs   = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"},] # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
 
 for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
     field[fourmie["pos"][0]][fourmie["pos"][1]] = fourmie["sym"]
@@ -176,24 +176,25 @@ def fourmie_config(fourmie, *args):
 
 def canvas_refresh():
     '''Met a jour TOUT le canvas'''
+    global fourmie_objs
+
     Canvas.delete("all")
     for y, line in enumerate(field):
         for x, cell in enumerate(line):
             if cell == "b":   Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
             elif cell == "w": Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
-            elif type(cell) == int:
-                fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
-                Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", lambda event, fourmie = fourmie_objs[cell]: fourmie_config(fourmie))
+    for fourmie in fourmie_objs:
+        fourmie["obj"] = Canvas.create_rectangle(fourmie["pos"][1] * (Height / nombre_case), fourmie["pos"][0] * (Width / nombre_case), (fourmie["pos"][1] + 1) * (Height / nombre_case), (fourmie["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmie["couleur"], tags = str(fourmie["sym"]))
+        Canvas.tag_bind(fourmie["obj"], "<Button-1>", lambda event, fourmie = fourmie: fourmie_config(fourmie))
     
 def reset_field(*args):
     '''Resets the field with no ants'''
     global Running, field, fourmie_objs
 
-    Running = False
-    Canvas.delete("all")
-    field = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)]
+    pause()
     fourmie_objs = []
-    canvas_refresh()
+    field        = [["w" for _ in range(nombre_case)] for _ in range(nombre_case)]
+    Canvas.delete("all"); canvas_refresh()
 
 def ajout_fourmie(*args):
     
@@ -224,12 +225,10 @@ racine.minsize(1280,720)
 # FRAMES CREATION:
 
 menu_du_haut             = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
-terrain_jeu_frame        = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
-
 menu_lateral             = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+terrain_jeu_frame        = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 menu_lateral_defaut      = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 menu_lateral_fourmie     = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
-
 
 menu_titre_frame         = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
 vitesse_frame            = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
@@ -241,46 +240,46 @@ couleur_comportement     = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
 
 # FRAMES PACK:
 
-menu_lateral.pack             (anchor = "e", fill = "y",    expand = 0, side = "right")
-menu_lateral_defaut.pack      (anchor = "n", fill = "y",    expand = 1, side = None)
 menu_du_haut.pack             (anchor = "n", fill = "x",    expand = 0, side = "top")
+menu_lateral.pack             (anchor = "e", fill = "y",    expand = 0, side = "right")
 terrain_jeu_frame.pack        (anchor = "s", fill = "both", expand = 1, side = None)
+menu_lateral_defaut.pack      (anchor = "n", fill = "y",    expand = 1, side = None)
 
 menu_titre_frame.pack         (padx = 10, pady = 30, expand = 0, fill = "both")
 vitesse_frame.pack            (padx = 10, pady = 30, expand = 0, fill = "both")
 controles_etat_jeu_frame.pack (padx = 10, pady = 30, expand = 0, fill = "both")
 game_file_control.pack        (padx = 10, pady = 30, expand = 0, fill = "both") 
+
 menu_titre_PAPL.pack          (padx = 10, pady = 30, expand = 0, fill = "both")
 couleur_comportement.pack     (padx = 10, pady = 30, expand = 0, fill = "both") 
 
 
-# BOUTTONS CREATION:
+# BOUTTONS/LABEL CREATION:
 
-bouton_Start          = tk.Button    (menu_du_haut,             text = "Play",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
-bouton_Pause          = tk.Button    (menu_du_haut,             text = "Pause",                       font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
-bouton_Quitter        = tk.Button    (menu_du_haut,             text = "Quit",                        font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
+bouton_Start          = tk.Button    (menu_du_haut,             text = "Play",                        font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = start)
+bouton_Pause          = tk.Button    (menu_du_haut,             text = "Pause",                       font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = pause)                
+bouton_Quitter        = tk.Button    (menu_du_haut,             text = "Quit",                        font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = quitter)
 
-label_Texte           = tk.Label     (menu_titre_frame,         text = "Les Commandes Avancées",      font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")   
-bouton_Vitesse        = tk.Button    (vitesse_frame,            text = vitesse_jeu[1],                font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = changer_vitesse)
-bouton_Retour         = tk.Button    (controles_etat_jeu_frame, text = "Retour",                      font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = retour)
-bouton_Avancer        = tk.Button    (controles_etat_jeu_frame, text = "Avancer",                     font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = avancer)
-bouton_Sauvegarder    = tk.Button    (game_file_control,        text = "Sauvegarder",                 font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = sauvegarder)
-bouton_Charger        = tk.Button    (game_file_control,        text = "Charger",                     font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = charger)
+label_Texte           = tk.Label     (menu_titre_frame,         text = "Les Commandes Avancées",      font = ("Helvetica 25 bold"), fg = "white",   bg = "#1b1b1b")   
+bouton_Vitesse        = tk.Button    (vitesse_frame,            text = vitesse_jeu[1],                font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = changer_vitesse)
+bouton_Retour         = tk.Button    (controles_etat_jeu_frame, text = "Retour",                      font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = retour)
+bouton_Avancer        = tk.Button    (controles_etat_jeu_frame, text = "Avancer",                     font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = avancer)
+bouton_Sauvegarder    = tk.Button    (game_file_control,        text = "Sauvegarder",                 font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = sauvegarder)
+bouton_Charger        = tk.Button    (game_file_control,        text = "Charger",                     font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = charger)
 
-Label_Text2           = tk.Label     (menu_titre_PAPL,          text = "Les Pour allez plus loin",    font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
-Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi",                    font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = ajout_fourmie)
+Label_Text2           = tk.Label     (menu_titre_PAPL,          text = "Les Pour allez plus loin",    font = ("Helvetica 25 bold"), fg = "white",   bg = "#1b1b1b")
+Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi",                    font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = ajout_fourmie)
 ComboBox_Comportement = ttk.Combobox (couleur_comportement,     values = comportement)
 
-label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
-retour_defaut_menu    = tk.Button    (menu_lateral_fourmie,     text = "X",                           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = change_menu)
-label_steps           = tk.Label     (terrain_jeu_frame,        text =  f"Step: {total_steps}",       font = ("Arial 18 bold"), fg = "white",   bg = "#2b2b2b")
+label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                     font = ("Helvetica 25 bold"), fg = "white",   bg = "#1b1b1b")
+retour_defaut_menu    = tk.Button    (menu_lateral_fourmie,     text = "X",                           font = ("Helvetica 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = change_menu)
+label_steps           = tk.Label     (terrain_jeu_frame,        text =  f"Step: {total_steps}",       font = ("Helvetica 18 bold"), fg = "white",   bg = "#2b2b2b")
 
-# BOUTTONS PACK:
+# BOUTTONS/LABEL PACK:
 
 bouton_Start.pack          (padx = 5, pady = 5, side = "left", expand = 1)
 bouton_Pause.pack          (padx = 5, pady = 5, side = "left", expand = 1)
 bouton_Quitter.pack        (padx = 5, pady = 5, side = "left", expand = 1)
-
 
 label_Texte.pack           (padx = 5, pady = 5, side = "top")
 bouton_Vitesse.pack        (padx = 5, pady = 5, side = "top")
@@ -321,9 +320,8 @@ racine.bind("<Control-l>", charger)
 racine.bind("<MouseWheel>", zoom_canvas)
 racine.bind("<KeyPress>",   tk_key_control)
 racine.bind("<BackSpace>", reset_field)
+
 # ========== Autres ==========
 
 ComboBox_Comportement.set("Teste d'autres directions !")
-
-
 racine.mainloop()
