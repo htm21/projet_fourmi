@@ -1,5 +1,5 @@
 import os, tkinter as tk, time as t
-from tkinter import ttk, filedialog, colorchooser
+from tkinter import ttk, filedialog
 
 print("\033c")
 
