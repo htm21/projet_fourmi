@@ -37,15 +37,14 @@ def changer_vitesse(*args):
     vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
     bouton_Vitesse.config(text = vitesse_jeu[1])
 
-def charger(*args):
-    '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
-    file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name
-
 def sauvegarder(*args): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
     fichier = [('Text Document', '*.txt')]
     fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
-    #test
+   
+def charger(*args):
+    '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
+    file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name    
 
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
