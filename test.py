@@ -1,9 +1,5 @@
-import tkinter as tk
-import time as t
+import ctypes, json, tkinter as tk, time as t
 from tkinter import ttk, filedialog, colorchooser
-import ctypes
-import json
-
 
 print("\033c")
 
@@ -26,8 +22,6 @@ comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comp
 
 fourmie_objs  = []
 fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
-
-fourmie_actuelle = None
 
 for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
     field[fourmie["pos"][0]][fourmie["pos"][1]] = fourmie["sym"]
@@ -59,7 +53,6 @@ def charger(*args):
             fourmie_objs = json.loads(save_file[save_file.index("Fourmies\n\n") + len("Fourmies\n\n") : save_file.index("\n\n// Etat")])
             field        = json.loads(save_file[save_file.index("Terrain\n\n") + len("Terrain\n\n") : save_file.index("\n\n// Variables")])
             steps, total_steps , nombre_case = json.loads(save_file[save_file.index("Variables\n\n") + len("Variables\n\n") : save_file.index("\n\nEnd")])
-
         Canvas.update(); canvas_refresh()
 
 def sauvegarder(*args): 
@@ -96,6 +89,7 @@ def start(*args):
 def pause():
     '''Met en pause le jeu'''
     global Running
+
     Running = False
 
 def tk_key_control(event):
@@ -122,7 +116,6 @@ def zoom_canvas(event):
             Width, Height = nombre_case, nombre_case
         else:
             Width -= 100; Height -= 100
-    
     Canvas.configure(width = Width, height = Height); canvas_refresh()
 
 def toggle_grid_lines():

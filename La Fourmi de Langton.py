@@ -1,9 +1,5 @@
-import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
-from tkinter import colorchooser
-import time as t
-import os
+import os, tkinter as tk, time as t
+from tkinter import ttk, filedialog, colorchooser
 
 print("\033c")
 
