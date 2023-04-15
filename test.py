@@ -5,23 +5,22 @@ print("\033c")
 
 # ========== VAR ==========
 
-Running       = False
-create_window = False
-steps         = 0
-total_steps   = 0
-Height, Width = 900, 900 # Dimensions du canvas
-nombre_case   = 100 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
-field         = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
-grid_l_types  = ["", "black"]
-Grid_Line     = grid_l_types[1]
+Running        = False
+create_window  = False
+refesh_counter = 0
+total_steps    = 0
+Height, Width  = 900, 900 # Dimensions du canvas
+nombre_case    = 51 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+field          = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
+grid_l_types   = ["", "black"]
+Grid_Line      = grid_l_types[1]
 
-vitesses      = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
-vitesse_jeu   = vitesses[0] # Vitesse du jeu
-directions    = ["0", "90", "180", "-90"] # Directions de la fourmie
-comportement  = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
+vitesses       = [(0.5,"Speed: x 1"), (0.1, "Speed: x 2"), (0, "Speed: CPU"), (0.7, "Speed: x 0.5")] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
+vitesse_jeu    = vitesses[0] # Vitesse du jeu
+directions     = ["0", "90", "180", "-90"] # Directions de la fourmie
+comportement   = ["GGDD", "GDGD", "GDDG", "DGGD", "DGDD", "DDGG"] # Types de comportement de la fourmie
 
-fourmie_objs  = []
-fourmie_objs.append({"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}) # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur |canvas.rectangle obj
+fourmie_objs   = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}] # l'object/dictionaire fourmie = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
 
 for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
     field[fourmie["pos"][0]][fourmie["pos"][1]] = fourmie["sym"]
@@ -30,9 +29,10 @@ for fourmie in fourmie_objs: # Pose les symboles des fourmies dans la grille
 
 def quitter(*args):
     '''Ferme le programme'''
-    global Running
+    global Running, create_window
     
     if Running: Running = False
+    if create_window: create_window = False
     racine.destroy()
 
 def changer_vitesse(*args):
@@ -44,7 +44,9 @@ def changer_vitesse(*args):
 
 def charger(*args):
     '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
-    global fourmie_objs, field, total_steps, steps, nombre_case
+    global fourmie_objs, field, total_steps, refesh_counter, nombre_case
+    
+    pause()
     fichier = filedialog.askopenfilename(title = "Charger une partie", filetypes = (('Text Document', '*.txt'),("Tous les fichiers", "*.*")))
     if fichier:
         with open(fichier, "r") as f:
@@ -52,18 +54,19 @@ def charger(*args):
 
             fourmie_objs = json.loads(save_file[save_file.index("Fourmies\n\n") + len("Fourmies\n\n") : save_file.index("\n\n// Etat")])
             field        = json.loads(save_file[save_file.index("Terrain\n\n") + len("Terrain\n\n") : save_file.index("\n\n// Variables")])
-            steps, total_steps , nombre_case = json.loads(save_file[save_file.index("Variables\n\n") + len("Variables\n\n") : save_file.index("\n\nEnd")])
+            refesh_counter, total_steps , nombre_case = json.loads(save_file[save_file.index("Variables\n\n") + len("Variables\n\n") : save_file.index("\n\nEnd")])
         Canvas.update(); canvas_refresh()
 
 def sauvegarder(*args): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
+    pause()
     fichier = [('Text Document', '*.txt')]
     fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier).name
     if fichier:
         with open(fichier, "w") as f:
             f.write(f"// Object Fourmies\n\n{fourmie_objs}\n\n")
             f.write(f"// Etat du Terrain\n\n{field}\n\n")
-            f.write(f"// Variables\n\n{[steps, total_steps, nombre_case]}\n\nEnd")
+            f.write(f"// Variables\n\n{[refesh_counter, total_steps, nombre_case]}\n\nEnd")
     
 
 def avancer(*args):
@@ -106,8 +109,7 @@ def zoom_canvas(event):
     global Width, Height
     
     if event.num == 4 or event.delta == 120: # Zoom In Canvas
-        if Canvas.winfo_width() >= terrain_jeu_frame.winfo_width() or Canvas.winfo_height() >= terrain_jeu_frame.winfo_height():
-            print("here")
+        if Canvas.winfo_width() > terrain_jeu_frame.winfo_width() or Canvas.winfo_height() > terrain_jeu_frame.winfo_height():
             Width, Height = terrain_jeu_frame.winfo_width(), terrain_jeu_frame.winfo_height()
         else: 
             Width += 100; Height += 100  
@@ -121,6 +123,7 @@ def zoom_canvas(event):
 def toggle_grid_lines():
     '''Toggles the grid lines of the Canvas'''
     global Grid_Line
+
     Grid_Line = grid_l_types[0] if Grid_Line == grid_l_types[-1] else grid_l_types[grid_l_types.index(Grid_Line) + 1] 
     Canvas.update(); canvas_refresh()
 
@@ -135,7 +138,7 @@ def change_type_case(fourmie, y, x):
 
 def fourmie_update():
     '''Met a jour le positionnement de la fourmie et les cases dans la liste "field" et canvas'''
-    global directions, steps, total_steps, Grid_Line 
+    global directions, refesh_counter, total_steps, Grid_Line 
 
     for ant in fourmie_objs:
         # Change la directionde la fourmie
@@ -157,8 +160,9 @@ def fourmie_update():
         # Canvas.tag_bind(ant["obj"],"<Button-1>", lambda event, fourmie = ant: fourmie_config(fourmie))
         Canvas.update()
     
-    total_steps += 1; steps += 1
-    if steps > 1000: canvas_refresh(); steps = 0
+    total_steps += 1; refesh_counter += 1
+    if refesh_counter > 1000: canvas_refresh(); refesh_counter = 0
+    label_steps.configure(text = f"Steps: {total_steps}")
     
 
 def fourmie_config(fourmie, *args):
@@ -180,7 +184,7 @@ def canvas_refresh():
             elif type(cell) == int:
                 fourmie_objs[cell]["obj"] = Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmie_objs[cell]["couleur"], tags = str(fourmie_objs[cell]["sym"]))
                 Canvas.tag_bind(fourmie_objs[cell]["obj"], "<Button-1>", lambda event, fourmie = fourmie_objs[cell]: fourmie_config(fourmie))
-
+    
 def reset_field(*args):
     '''Resets the field with no ants'''
     global Running, field, fourmie_objs
@@ -192,7 +196,8 @@ def reset_field(*args):
     canvas_refresh()
 
 def ajout_fourmie(*args):
-
+    
+    pause()
     fourmie_create_window = tk.Tk()
     width, height = 800, 600
     screen_width, screen_height  = racine.winfo_screenwidth(), racine.winfo_screenheight()
@@ -268,6 +273,7 @@ ComboBox_Comportement = ttk.Combobox (couleur_comportement,     values = comport
 
 label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                     font = ("Arial 25 bold"), fg = "white",   bg = "#1b1b1b")
 retour_defaut_menu    = tk.Button    (menu_lateral_fourmie,     text = "X",                           font = ("Arial 25 bold"), fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = change_menu)
+label_steps           = tk.Label     (terrain_jeu_frame,        text =  f"Step: {total_steps}",       font = ("Arial 18 bold"), fg = "white",   bg = "#2b2b2b")
 
 # BOUTTONS PACK:
 
@@ -289,6 +295,7 @@ ComboBox_Comportement.pack (padx = 5, pady = 5, side = "right")
 
 label_fourmie.pack         (padx = 5, pady = 5, side = "top")
 retour_defaut_menu.pack    (padx = 5, pady = 5, side = "top")
+label_steps.place          (x = 10, y = 10)
 
 
 # CANVAS CREATION / PACK:
