@@ -1,5 +1,5 @@
 import ctypes, json, tkinter as tk, time as t
-from tkinter import ttk, filedialog, colorchooser
+from tkinter import ttk, filedialog
 
 print("\033c")
 
@@ -42,7 +42,6 @@ def changer_vitesse(*args):
     vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
     bouton_Vitesse.config(text = vitesse_jeu[1])
 
-
 def sauvegarder(*args): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
     fichier = [('Text Document', '*.txt')]
@@ -51,7 +50,6 @@ def sauvegarder(*args):
 def charger(*args):
     '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
     file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name    
-    
 
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
