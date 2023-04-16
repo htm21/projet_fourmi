@@ -44,8 +44,7 @@ def changer_vitesse(*args):
 
 def sauvegarder(*args): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
-    fichier = [('Text Document', '*.txt')]
-    fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier)
+    fichier = filedialog.asksaveasfile(filetypes = ('Text Document', '*.txt'), defaultextension = ('Text Document', '*.txt'))
    
 def charger(*args):
     '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
@@ -208,7 +207,8 @@ def ajout_fourmie(*args):
 
 # ========== Tkinter GUI ==========
 
-if platform.system() != "Darwin" or platform.system() != "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1)
+if platform.system() == "Windows": 
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")

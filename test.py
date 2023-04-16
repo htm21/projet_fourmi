@@ -60,8 +60,7 @@ def charger(*args):
 def sauvegarder(*args): 
     '''Ouvre une fenetre pour savegarder la parie en cours'''
     pause()
-    fichier = [('Text Document', '*.txt')]
-    fichier = filedialog.asksaveasfile(filetypes = fichier, defaultextension = fichier).name
+    fichier = filedialog.asksaveasfile(filetypes = ('Text Document', '*.txt'), defaultextension = ('Text Document', '*.txt')).name
     if fichier:
         with open(fichier, "w") as f:
             f.write(f"// Object Fourmies\n\n{fourmie_objs}\n\n")
