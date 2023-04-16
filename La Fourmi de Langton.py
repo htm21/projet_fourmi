@@ -207,8 +207,7 @@ def ajout_fourmie(*args):
 
 # ========== Tkinter GUI ==========
 
-if platform.system() == "Windows": 
-    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+if platform.system() == "Windows": ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
