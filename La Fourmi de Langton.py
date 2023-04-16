@@ -1,4 +1,4 @@
-import ctypes, os, json, tkinter as tk, time as t
+import ctypes, platform, json, tkinter as tk, time as t
 from tkinter import ttk, filedialog, colorchooser
 
 print("\033c")
@@ -202,13 +202,13 @@ def ajout_fourmie(*args):
     fourmie_create_window.overrideredirect(True)
     
     exitbutton = tk.Button(fourmie_create_window, relief = "flat", text = "X", command = fourmie_create_window.destroy).pack(ipadx = 10, ipady = 0, side = "right", anchor = "n")
-    
+
     fourmie_create_window.mainloop()
 
 
 # ========== Tkinter GUI ==========
 
-if os.name != "Darwin" or os.name != "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1)
+if platform.system() != "Darwin" or platform.system() != "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 racine = tk.Tk()
 racine.title("La Fourmi de Langton")
