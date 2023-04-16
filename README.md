@@ -26,6 +26,6 @@ Le "brouillon" permettant de retranscrire des idées de code est lié au fichier
 
 # LE CODE - La Fourmi de Langton.py
 \
-Voici la bibliothèque résumant notre code : 
+**LA BIBLIOTHÈQUE - LE CODE :**
 \
 https://ahmadpro.notion.site/LE-CODE-La-Fourmi-de-Langton-py-f4d7173740314084be3bc8fe718ac946
