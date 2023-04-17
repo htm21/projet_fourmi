@@ -23,3 +23,9 @@ L'objectif de ce projet repose sur la création de *"La Fourmi de Langton"*, un 
 - Focalisation sur la partie "Pour allez plus loin"
 
 Le "brouillon" permettant de retranscrire des idées de code est lié au fichier **test.py**, le code final et propre sur le fichier                    **La Fourmi de Langton.py**
+
+# LE CODE - La Fourmi de Langton.py
+\
+**LA BIBLIOTHÈQUE - LE CODE :**
+\
+https://ahmadpro.notion.site/LE-CODE-La-Fourmi-de-Langton-py-f4d7173740314084be3bc8fe718ac946
