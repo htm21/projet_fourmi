@@ -198,7 +198,8 @@ def ajout_fourmie(*args):
     x, y = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
     fourmie_create_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
     fourmie_create_window.resizable(False,False)
-    fourmie_create_window.overrideredirect(True)
+    if platform.system() == "Windows": fourmie_create_window.overrideredirect(True)
+    
     
     exitbutton = tk.Button(fourmie_create_window, relief = "flat", text = "X", command = fourmie_create_window.destroy).pack(ipadx = 10, ipady = 0, side = "right", anchor = "n")
 
