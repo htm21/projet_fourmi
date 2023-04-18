@@ -43,7 +43,12 @@ def changer_vitesse(*args):
     bouton_Vitesse.config(text = vitesse_jeu[1])
 
 def charger(*args):
-    '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
+   
+    with open("game_state.txt", "r") as file:
+        # Lire la grille et la position de la fourmi depuis le fichier
+        grid_str = file.readline().rstrip()
+        ant_pos_str = file.readline().rstrip()
+        ant_dir_str = file.readline().rstrip()hier txt qui a une sauvegarede d'un jeu'''
     global fourmie_objs, field, total_steps, refesh_counter, nombre_case
     
     pause()
