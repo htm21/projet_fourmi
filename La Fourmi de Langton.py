@@ -43,8 +43,9 @@ def changer_vitesse(*args):
     bouton_Vitesse.config(text = vitesse_jeu[1])
 
 def sauvegarder(*args): 
-    '''Ouvre une fenetre pour savegarder la parie en cours'''
-    fichier = filedialog.asksaveasfile(filetypes = ('Text Document', '*.txt'), defaultextension = ('Text Document', '*.txt'))
+with open("game_state.txt", "w") as file:
+        file.write(str(grid) + "\n")
+        
    
 def charger(*args):
     with open("game_state.txt", "r") as file:
