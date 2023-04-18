@@ -58,7 +58,12 @@ def charger(*args):
         Canvas.update(); canvas_refresh()
 
 def sauvegarder(*args): 
-    '''Ouvre une fenetre pour savegarder la parie en cours'''
+    # Sauvegarder l'état actuel de la grille et la position de la fourmi dans un fichier
+    with open("game_state.txt", "w") as file:
+        file.write(str(grid) + "\n")
+        file.write(str(ant_pos[0]) + "," + str(ant_pos[1]) + "\n")
+        file.write(ant_dir)
+
     pause()
     fichier = filedialog.asksaveasfile(filetypes = ('Text Document', '*.txt'), defaultextension = ('Text Document', '*.txt')).name
     if fichier:
