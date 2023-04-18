@@ -47,7 +47,11 @@ def sauvegarder(*args):
     fichier = filedialog.asksaveasfile(filetypes = ('Text Document', '*.txt'), defaultextension = ('Text Document', '*.txt'))
    
 def charger(*args):
-    '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
+    with open("game_state.txt", "r") as file:
+        # Lire la grille et la position de la fourmi depuis le fichier
+        grid_str = file.readline().rstrip()
+        ant_pos_str = file.readline().rstrip()
+        ant_dir_str = file.readline().rstrip() fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
     file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name    
     
 
