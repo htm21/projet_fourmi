@@ -245,7 +245,7 @@ def ajout_fourmie(*args):
     if platform.system() == "Windows": fourmie_create_window.overrideredirect(True); fourmie_create_window.wm_attributes("-topmost", 1)
     a = tk.StringVar()
     
-    main_frame      = tk.Frame(fourmie_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7).pack(side = None,     anchor = None,     fill = "both", expand = 1)
+    main_frame      = tk.Frame(fourmie_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
 
     menu_top_bar     = tk.Frame(main_frame,      bg = "#3b3b3b")
     menu_creation    = tk.Frame(main_frame,      bg = "#1b1b1b")
