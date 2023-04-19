@@ -231,6 +231,7 @@ def ajout_fourmi(*args):
 
     pause()
     fourmi_create_window = tk.Tk()
+    fourmi_create_window.title("Configuration de la Fourmi")
     width, height = 1000, 700
     screen_width, screen_height  = fourmi_create_window.winfo_screenwidth(), fourmi_create_window.winfo_screenheight()
     x, y = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
@@ -318,7 +319,7 @@ menu_du_haut             = tk.Frame (racine,       bg = "#1b1b1b", highlightback
 menu_lateral             = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 terrain_jeu_frame        = tk.Frame (racine,       bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 menu_lateral_defaut      = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
-menu_lateral_fourmi     = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
+menu_lateral_fourmi      = tk.Frame (menu_lateral, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 5)
 
 menu_titre_frame         = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
 vitesse_frame            = tk.Frame (menu_lateral_defaut, bg = "#1b1b1b")
@@ -378,7 +379,6 @@ Label_Text2.pack           (padx = 5, pady = 5, side = "top")
 Bouton_fourmi2.pack        (padx = 5, pady = 5, side = "left")
 ComboBox_taille_grille.pack (padx = 5, pady = 5, side = "right")
 
-label_fourmi.pack         (padx = 5, pady = 5, side = "top")
 label_steps.place          (x = 10, y = 10)
 
 
