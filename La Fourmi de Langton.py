@@ -44,8 +44,12 @@ def changer_vitesse(*args):
     '''Change la vitesse du jeu'''
     global vitesses, vitesse_jeu
     
-    vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
-    bouton_Vitesse.config(text = vitesse_jeu[1])
+    if not args or args[0].keysym == "Up":
+        vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]
+        bouton_Vitesse.config(text = vitesse_jeu[1])
+    elif args[0].keysym == "Down":
+        vitesse_jeu = vitesses[-1] if vitesse_jeu == vitesses[0] else vitesses[vitesses.index(vitesse_jeu) - 1]
+        bouton_Vitesse.config(text = vitesse_jeu[1])
 
 def sauvegarder(*args): 
     with open("game_state.txt", "w") as file:
@@ -103,10 +107,6 @@ def tk_key_control(event):
     '''Takes control of Keyboard Input'''
     if event.char == "g":
         toggle_grid_lines()
-
-def change_menu(*args):
-    menu_lateral_fourmie.pack_forget()
-    menu_lateral_defaut.pack(fill = "y", expand = 1)
 
 def zoom_canvas(event):
     '''Zooms in or out of the canvas for better visability'''
@@ -360,7 +360,6 @@ Bouton_fourmi2        = tk.Button    (couleur_comportement,     text = "+ Fourmi
 ComboBox_Comportement = ttk.Combobox (couleur_comportement,     values = comportement)
 
 label_fourmie         = tk.Label     (menu_lateral_fourmie,     text = "Fourmie",                     font = ("Helvetica 25 bold"),                   fg = "white",   bg = "#1b1b1b")
-retour_defaut_menu    = tk.Button    (menu_lateral_fourmie,     text = "X",                           font = ("Helvetica 25 bold"), cursor = "hand2", fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = change_menu)
 label_steps           = tk.Label     (terrain_jeu_frame,        text =  f"Step: {total_steps}",       font = ("Helvetica 18 bold"), cursor = "hand2", fg = "white",   bg = "#2b2b2b")
 
 # BOUTTONS/LABEL PACK:
@@ -380,7 +379,6 @@ Bouton_fourmi2.pack        (padx = 5, pady = 5, side = "left")
 ComboBox_Comportement.pack (padx = 5, pady = 5, side = "right")
 
 label_fourmie.pack         (padx = 5, pady = 5, side = "top")
-retour_defaut_menu.pack    (padx = 5, pady = 5, side = "top")
 label_steps.place          (x = 10, y = 10)
 
 
@@ -396,7 +394,8 @@ canvas_refresh() # Affiche le canvas pour la premiere fois
 racine.bind('<Escape>',    quitter)
 racine.bind("<space>",     start)
 
-racine.bind("<Tab>",       changer_vitesse)
+racine.bind("<Up>",       changer_vitesse)
+racine.bind("<Down>",     changer_vitesse)
 
 racine.bind("<Right>",     avancer)
 racine.bind("<Left>",      retour)
