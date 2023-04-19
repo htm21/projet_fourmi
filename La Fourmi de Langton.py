@@ -1,4 +1,4 @@
-import ctypes, platform, json, tkinter as tk, time as t
+import ctypes, os, platform, json, tkinter as tk, time as t
 from tkinter import ttk, filedialog, colorchooser
 
 print("\033c")
@@ -358,7 +358,7 @@ bouton_Sauvegarder     = tk.Button    (game_file_control,        text = "Sauvega
 bouton_Charger         = tk.Button    (game_file_control,        text = "Charger",                     font = ("Helvetica 25 bold"), cursor = "hand2", fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = charger)
 
 Label_Text2            = tk.Label     (menu_titre_PAPL,          text = "Les Pour allez plus loin",    font = ("Helvetica 25 bold"),                   fg = "white",   bg = "#1b1b1b")
-Bouton_fourmi2         = tk.Button    (couleur_comportement,     text = "+ Fourmi",                    font = ("Helvetica 25 bold"), cursor = "hand2", fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = ajout_fourmie)
+Bouton_fourmi2         = tk.Button    (couleur_comportement,     text = "+ Fourmi",                    font = ("Helvetica 25 bold"), cursor = "hand2", fg = "#1b1b1b", bg = "white",  activeforeground = "#1b1b1b", activebackground = "white", bd = 7, pady = 5, padx = 20, width = 10, command = ajout_fourmi)
 ComboBox_taille_grille = ttk.Combobox (couleur_comportement,     values = taille_grille, state="readonly")
 
 label_steps            = tk.Label     (terrain_jeu_frame,        text =  f"Step: {total_steps}",       font = ("Helvetica 18 bold"), cursor = "hand2", fg = "white",   bg = "#2b2b2b")
@@ -410,5 +410,11 @@ racine.bind("<BackSpace>", reset_field)
 # ========== Autres ==========
 
 ComboBox_taille_grille.set("Choisie la taille")
+
+
+dirname = os.path.dirname(__file__)
+image_path = os.path.join(dirname, "ICONS", "logo.png")                     
+logo = tk.PhotoImage(file=image_path)
+racine.iconphoto(False, logo)
 
 racine.mainloop()
