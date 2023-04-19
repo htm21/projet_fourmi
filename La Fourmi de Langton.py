@@ -111,18 +111,19 @@ def tk_key_control(event):
 def zoom_canvas(event):
     '''Zooms in or out of the canvas for better visability'''
     global Width, Height
-    
+
     if event.num == 4 or event.delta == 120: # Zoom In Canvas
-        if Canvas.winfo_width() > terrain_jeu_frame.winfo_width() or Canvas.winfo_height() > terrain_jeu_frame.winfo_height():
-            Width, Height = terrain_jeu_frame.winfo_width(), terrain_jeu_frame.winfo_height()
+        if Canvas.winfo_reqwidth() >= (terrain_jeu_frame.winfo_width() - 100) or Canvas.winfo_reqheight() >= (terrain_jeu_frame.winfo_height() - 100):
+            Width, Height = Canvas.winfo_reqwidth(), Canvas.winfo_reqheight()
         else: 
-            Width += 100; Height += 100  
+            Width += 50; Height += 50
     elif event.num == 5 or event.delta == -120: # Zoom Out Canvas
-        if Canvas.winfo_width() <= nombre_case or Canvas.winfo_height() <= nombre_case:
+        if Canvas.winfo_reqwidth() <= nombre_case or Canvas.winfo_reqheight() <= nombre_case:
             Width, Height = nombre_case, nombre_case
         else:
-            Width -= 100; Height -= 100
+            Width -= 50; Height -= 50
     Canvas.configure(width = Width, height = Height); canvas_refresh()
+
 
 def toggle_grid_lines():
     '''Toggles the grid lines of the Canvas'''
@@ -130,6 +131,7 @@ def toggle_grid_lines():
 
     Grid_Line = grid_l_types[0] if Grid_Line == grid_l_types[-1] else grid_l_types[grid_l_types.index(Grid_Line) + 1] 
     Canvas.update(); canvas_refresh()
+
 
 def change_type_case(y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
@@ -139,6 +141,7 @@ def change_type_case(y, x):
     else:
         field[y][x] = "w"
         Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
+
 
 def fourmi_update():
     '''Met a jour le positionnement de la fourmi et les cases dans la liste "field" et canvas'''
@@ -184,7 +187,8 @@ def canvas_refresh():
             elif cell == "w": Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
     for fourmi in fourmi_objs:
         fourmi["obj"] = Canvas.create_rectangle(fourmi["pos"][1] * (Height / nombre_case), fourmi["pos"][0] * (Width / nombre_case), (fourmi["pos"][1] + 1) * (Height / nombre_case), (fourmi["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmi["couleur"])
-    
+
+   
 def reset_field(*args):
     '''Resets the field with no ants'''
     global Running, field, fourmi_objs
@@ -224,6 +228,7 @@ def configure_creation_fourmi(*config_type):
         fourmi_color  = "red"
         
         canvas_refresh()
+
 
 def ajout_fourmi(*args):
     '''Ouvre une fenetre separee pour configurer et ajouter une fourmi au terrain'''
@@ -299,8 +304,6 @@ def ajout_fourmi(*args):
     cancel.pack          (side = "right", anchor = None,padx = 5, pady = 3)
 
     fourmi_create_window.mainloop()
-
-
 
 
 # ========== Tkinter GUI ==========
