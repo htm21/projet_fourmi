@@ -237,12 +237,12 @@ def ajout_fourmie(*args):
 
     pause()
     fourmie_create_window = tk.Tk()
-    width, height = 800, 600
+    width, height = 1000, 700
     screen_width, screen_height  = fourmie_create_window.winfo_screenwidth(), fourmie_create_window.winfo_screenheight()
     x, y = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
     fourmie_create_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
     fourmie_create_window.resizable(False,False)
-    if platform.system() == "Windows": fourmie_create_window.overrideredirect(True); fourmie_create_window.wm_attributes("-topmost", 1)
+    if platform.system() == "Windows": fourmie_create_window.overrideredirect(1); fourmie_create_window.wm_attributes("-topmost", 1); ctypes.windll.shcore.SetProcessDpiAwareness(1)
     a = tk.StringVar()
     
     main_frame      = tk.Frame(fourmie_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
