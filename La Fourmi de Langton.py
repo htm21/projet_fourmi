@@ -131,7 +131,7 @@ def toggle_grid_lines():
     Grid_Line = grid_l_types[0] if Grid_Line == grid_l_types[-1] else grid_l_types[grid_l_types.index(Grid_Line) + 1] 
     Canvas.update(); canvas_refresh()
 
-def change_type_case(fourmie, y, x):
+def change_type_case(y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
     if fourmie["case_actuelle"] == "w":
         field[y][x] = "b"
@@ -150,13 +150,17 @@ def fourmie_update():
         else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
     
         # Change la couleur de la case en fonction de sa couleur precedente 
-        change_type_case(ant, *ant["pos"])
+        change_type_case(*ant["pos"])
 
         # Bouge la fourmie en fonction de son orientation
         if   ant["direction"] == "0":   ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
+        # si pos y de ant est toute en haut elle redecnends tout en bas sinon elle monte d'une case
         elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
+        # si pos y de ant est toute en bas elle remonte toute n haut sinon elle desends d'une case 
         elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
+        #  si pos x de ant est toute a gauche elle repasse toute a droite sinon elle bouge d'une case vers la gauche
         elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
+        # si pos x de ant est toute a droite elle repasse toute a gauche sinon elle bouge d'une case vers la droite
 
         # Met a jour le canvas et suvegarde la case actuelle
         ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
@@ -167,15 +171,6 @@ def fourmie_update():
     total_steps += 1; refesh_counter += 1
     if refesh_counter > 1000: canvas_refresh(); refesh_counter = 0
     label_steps.configure(text = f"Steps: {total_steps}")
-    
-
-def fourmie_config(fourmie, *args):
-    '''Opens a configuration window for the ant object'''
-
-    if Running: return
-    menu_lateral_defaut.pack_forget()
-    menu_lateral_fourmie.pack(fill = "y", expand = 1)
-    label_fourmie.config(text = f"Fourmie: {fourmie['sym'] + 1}")
 
 
 def canvas_refresh():
@@ -188,8 +183,7 @@ def canvas_refresh():
             if cell == "b":   Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
             elif cell == "w": Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
     for fourmie in fourmie_objs:
-        fourmie["obj"] = Canvas.create_rectangle(fourmie["pos"][1] * (Height / nombre_case), fourmie["pos"][0] * (Width / nombre_case), (fourmie["pos"][1] + 1) * (Height / nombre_case), (fourmie["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmie["couleur"], tags = str(fourmie["sym"]))
-        Canvas.tag_bind(fourmie["obj"], "<Button-1>", lambda event, fourmie = fourmie: fourmie_config(fourmie))
+        fourmie["obj"] = Canvas.create_rectangle(fourmie["pos"][1] * (Height / nombre_case), fourmie["pos"][0] * (Width / nombre_case), (fourmie["pos"][1] + 1) * (Height / nombre_case), (fourmie["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmie["couleur"])
     
 def reset_field(*args):
     '''Resets the field with no ants'''
@@ -284,7 +278,7 @@ def ajout_fourmie(*args):
     couleur_box     = tk.Button     (color_framer, width = 6, height = 3, cursor = "hand2", relief = "sunken", bd = 0, activebackground = fourmie_color, bg = fourmie_color, command = lambda: configure_creation_fourmie("color", couleur_box))
     
     direction_label = tk.Label      (direction_framel, text = "Direction Fourmie :", font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
-    direction_entry = ttk.Combobox  (direction_framer, text = "Position De La Fourmie:", font = ("Helvetica 10 bold"), state = "readonly", values = directions)    
+    direction_entry = ttk.Combobox  (direction_framer, text = "Position De La Fourmie:", font = ("Helvetica 10 bold"), state = "readonly", cursor = "hand2", justify = "center", values = directions)    
 
     cancel          = tk.Button     (menu_bottom_bar, width = 8, height = 2, cursor = "hand2", relief = "flat", font = ("Helvetica 10 bold"), text = "Cancel", command = fourmie_create_window.destroy)
     create          = tk.Button     (menu_bottom_bar, width = 8, height = 2, cursor = "hand2", relief = "flat", font = ("Helvetica 10 bold"), text = "Create", command = lambda: configure_creation_fourmie("add", posy_entry, posx_entry, direction_entry, fourmie_create_window))
