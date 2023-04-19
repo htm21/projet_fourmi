@@ -207,9 +207,6 @@ def configure_creation_fourmie(*config_type):
     if config_type[0] == "color":
         fourmie_color = colorchooser.askcolor()[1]
         config_type[1].config(bg = fourmie_color, activebackground = fourmie_color)
-    
-    elif config_type[0] == "direction":
-        pass
 
     elif config_type[0] == "add":
         try: 
@@ -221,9 +218,11 @@ def configure_creation_fourmie(*config_type):
             else: pos[1] = int(config_type[2].get())
         except ValueError: pass
         
-        fourmie_objs.append({"sym" : symbol, "pos" : pos, "direction" : directions[0], "case_actuelle" : "w", "couleur" : fourmie_color, "obj" : "None"})
-        config_type[3].destroy()
-
+        if directions[directions.index(config_type[3].get())] not in directions: direction = directions[0]
+        else: direction = directions[directions.index(config_type[3].get())]
+        fourmie_objs.append({"sym" : symbol, "pos" : pos, "direction" : direction, "case_actuelle" : "w", "couleur" : fourmie_color, "obj" : "None"})
+        
+        config_type[4].destroy()
         symbol         = fourmie_objs[-1]["sym"] + 1 if fourmie_objs else 0
         pos            = [nombre_case // 2,nombre_case // 2]
         direction      = directions[0]
@@ -243,8 +242,7 @@ def ajout_fourmie(*args):
     fourmie_create_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
     fourmie_create_window.resizable(False,False)
     if platform.system() == "Windows": fourmie_create_window.overrideredirect(1); fourmie_create_window.wm_attributes("-topmost", 1); ctypes.windll.shcore.SetProcessDpiAwareness(1)
-    a = tk.StringVar()
-    
+
     main_frame      = tk.Frame(fourmie_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
 
     menu_top_bar     = tk.Frame(main_frame,      bg = "#3b3b3b")
@@ -286,10 +284,10 @@ def ajout_fourmie(*args):
     couleur_box     = tk.Button     (color_framer, width = 6, height = 3, cursor = "hand2", relief = "sunken", bd = 0, activebackground = fourmie_color, bg = fourmie_color, command = lambda: configure_creation_fourmie("color", couleur_box))
     
     direction_label = tk.Label      (direction_framel, text = "Direction Fourmie :", font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
-    direction_entry = tk.OptionMenu (direction_framer, a ,directions)    
-   
+    direction_entry = ttk.Combobox  (direction_framer, text = "Position De La Fourmie:", font = ("Helvetica 10 bold"), state = "readonly", values = directions)    
+
     cancel          = tk.Button     (menu_bottom_bar, width = 8, height = 2, cursor = "hand2", relief = "flat", font = ("Helvetica 10 bold"), text = "Cancel", command = fourmie_create_window.destroy)
-    create          = tk.Button     (menu_bottom_bar, width = 8, height = 2, cursor = "hand2", relief = "flat", font = ("Helvetica 10 bold"), text = "Create", command = lambda: configure_creation_fourmie("add", posy_entry, posx_entry, fourmie_create_window))
+    create          = tk.Button     (menu_bottom_bar, width = 8, height = 2, cursor = "hand2", relief = "flat", font = ("Helvetica 10 bold"), text = "Create", command = lambda: configure_creation_fourmie("add", posy_entry, posx_entry, direction_entry, fourmie_create_window))
 
 
     exitbutton.pack      (side = "right", anchor = None,padx = 5, pady = 5)
@@ -300,7 +298,7 @@ def ajout_fourmie(*args):
     couleur_label.pack   (side = "left",padx = 30)
     couleur_box.pack     (side = None,    anchor = "center",padx = 145)
     direction_label.pack (side = "left",padx = 30)
-    direction_entry.pack (side = None,    anchor = "center",padx = 145)
+    direction_entry.pack (side = None,    anchor = "center", ipady = 10, fill = "y", expand = 1)
     create.pack          (side = "right", anchor = None,padx = 5, pady = 3)
     cancel.pack          (side = "right", anchor = None,padx = 5, pady = 3)
 
