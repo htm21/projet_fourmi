@@ -65,20 +65,48 @@ def changer_vitesse(*args):
     bouton_Vitesse.config(image = vitesse_jeu[1])
 
 
-def sauvegarder(*args): 
-    with open("game_state.txt", "w") as file:
-        file.write(str(grid) + "\n")
-        file.write(str(ant_pos[0]) + "," + str(ant_pos[1]) + "\n")
-        file.write(ant_dir)
+def sauvegarder(file_name, position, couleurs):
+    mon_fichier = open(file_name,"w")
+    text = [str(position) + "\n", str(couleurs)]
+    mon_fichier.writelines(text)
+    mon_fichier.close()
 
+    print(text)
 
-def charger(*args):
-    with open("game_state.txt", "r") as file:
-        # Lire la grille et la position de la fourmi depuis le fichier
-        grid_str = file.readline().rstrip()
-        ant_pos_str = file.readline().rstrip()
-        ant_dir_str = file.readline().rstrip() # fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
-    file_path = filedialog.askopenfilename(title = "Charger une partie", filetypes = (("Fichiers textes", "*.txt"),("Tous les fichiers", "*.*"))).name       
+def recuperer_tuple(text):
+    ## Retirer les parentheses et les virgules
+    text = text.replace("(", "")
+    text = text.replace(")", "")
+
+    text = text.split(", ")
+
+    text = (int(text[0]), int(text[1]))
+
+    return text
+
+def recuperer_list(text):
+    ## Retirer les crochets
+    text = text.replace("[", "")
+    text = text.replace("]", "")
+
+    liste = text.split(", ")
+    for i in range(len(liste)):
+        liste[i] = eval(liste[i])
+
+    return liste
+
+def charger(file_name):
+    mon_fichier = open(file_name,"r")
+    text = mon_fichier.readlines()
+    mon_fichier.close()
+
+    position, couleurs = text
+    
+    position = recuperer_tuple(position)
+    couleurs = recuperer_list(couleurs)
+
+    return position, couleurs
+     
 
 
 def avancer(*args):
