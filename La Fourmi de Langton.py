@@ -4,8 +4,10 @@ from tkinter import ttk, filedialog, colorchooser
 print("\033c")
 
 # =============== initiation Tk =============
-if platform.system() == "Windows": ctypes.windll.shcore.SetProcessDpiAwareness(1)
 racine = tk.Tk()
+
+if platform.system() == "Windows" or platform.system() == "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1)
+else: racine.tk.call('tk', 'scaling', 2)
 
 # ========== Chargement des Icones ==========
 program_icons  = {"Logo" : None, "Backwards" : None, "Cross" : None, "Forwards" : None,  "Load" : None,  "Pause" : None,  "Play" : None,  "Stop" : None,  "Save" : None,  "Zoom In" : None,  "Zoom Out" : None, "Speed 1" : None, "Speed 2" : None, "Speed 3" : None, "Add Ant" : None, "Escape" : None}
@@ -18,7 +20,7 @@ for icon in program_icons:
 # ================== VAR ====================
 
 Running        = False
-create_window  = False
+create_window  = None
 
 refesh_counter = 0
 total_steps    = 0
@@ -146,6 +148,7 @@ def retour(*args):
         if refesh_counter > 1000: canvas_refresh(); refesh_counter = 0
         label_steps.configure(text = f"Steps: {total_steps}")
 
+
 def start(*args):
     '''Fait tourner le jeu'''
     global Running
@@ -204,18 +207,16 @@ def toggle_grid_lines():
 def change_field_size(*args):
     global field, fourmi_objs, nombre_case, pos, symbol, total_steps, refesh_counter
 
-
     nombre_case = int(cbox_field_taille.get()) + 1
-    field = []
-    field = [["w" for _ in range(nombre_case)] for _ in range(nombre_case)]
-    fourmi_objs = []
-    symbol = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
-    pos = [nombre_case // 2,nombre_case // 2]
+    field       = []
+    pos         = [nombre_case // 2,nombre_case // 2]
+    field       = [["w" for _ in range(nombre_case)] for _ in range(nombre_case)]
+    fourmi_objs = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}]
+    symbol      = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
     cbox_field_taille.set(f"Taille Terrain: {cbox_field_taille.get()}x{cbox_field_taille.get()}")
     total_steps, refesh_counter = 0, 0
     label_steps.configure(text = f"Steps: {total_steps}")
     Main_Frame.focus() 
-    
     canvas_refresh(); Canvas.update()
 
 
@@ -292,7 +293,7 @@ def reset_field(*args):
 
 
 def configure_creation_fourmi(*config_type):
-    global symbol, pos, direction, fourmi_color, nombre_case, field
+    global symbol, pos, direction, fourmi_color, nombre_case, field, create_window
 
     if config_type[0] == "color":
         fourmi_color = colorchooser.askcolor()[1]
@@ -319,6 +320,7 @@ def configure_creation_fourmi(*config_type):
         direction      = directions[0]
         fourmi_color  = "red"
         
+        create_window = None
         canvas_refresh()
 
 
@@ -397,6 +399,7 @@ def ajout_fourmi(*args):
     cancel.pack          (side = "right", anchor = None,padx = 5, pady = 3)
 
     fourmi_create_window.mainloop()
+
 
 
 # ========== Tkinter GUI ==========
