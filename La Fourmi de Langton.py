@@ -3,13 +3,15 @@ from tkinter import ttk, filedialog, colorchooser
 
 print("\033c")
 
-# =============== initiation Tk =============
+# =============== Initiation TK =============
+
 racine = tk.Tk()
 
 if platform.system() == "Windows" or platform.system() == "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1)
 else: racine.tk.call('tk', 'scaling', 2)
 
 # ========== Chargement des Icones ==========
+
 program_icons  = {"Logo" : None, "Backwards" : None, "Cross" : None, "Forwards" : None,  "Load" : None,  "Pause" : None,  "Play" : None,  "Stop" : None,  "Save" : None,  "Zoom In" : None,  "Zoom Out" : None, "Speed 1" : None, "Speed 2" : None, "Speed 3" : None, "Add Ant" : None, "Escape" : None}
 
 program_folder_path = os.path.dirname(__file__)
@@ -17,17 +19,17 @@ for icon in program_icons:
     icon_file = icon + ".png"
     program_icons[icon] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon_file))
 
-# ================== VAR ====================
+# ================== Var ====================
 
 Running        = False
 create_window  = None
 
 refesh_counter = 0
 total_steps    = 0
-Height, Width  = 700, 700 # Dimensions du canvas
-taille_grille  = [20, 50, 100, 200] # Tailles Du Terrain
-nombre_case    = taille_grille[1] + 1 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
-field          = [["w" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 40x40 remplie de "0"
+Height, Width  = 650, 650 # Dimensions du canvas
+taille_grille  = [4, 10, 20, 30, 50, 70, 100, 150, 200, 500] # Tailles Du Terrain
+nombre_case    = taille_grille[4] + 1 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+field          = [["white" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 50x50 remplie de "w"
 grid_l_types   = ["", "black"]
 Grid_Line      = grid_l_types[1]
 
@@ -35,17 +37,20 @@ vitesses       = [(0.5, program_icons["Speed 1"]), (0.1, program_icons["Speed 2"
 vitesse_jeu    = vitesses[0] # Vitesse du jeu
 directions     = ["0", "90", "180", "-90"] # Directions de la fourmie
 
-fourmi_objs    = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}] # l'object/dictionaire fourmi = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
+fourmi_objs    = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "white", "couleur" : "red", "obj" : "None"}] # l'object/dictionaire fourmi = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
 
 symbol         = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
 pos            = [nombre_case // 2,nombre_case // 2]
 direction      = directions[0]
-fourmi_color   = "red"
+fourmi_color   = "red" 
 
-for fourmi in fourmi_objs: # Pose les symboles des fourmis dans la grille
-    field[fourmi["pos"][0]][fourmi["pos"][1]] = fourmi["sym"]   
+# ========== Func ==========
 
-# ========== FUNC ==========
+def tk_key_control(event):
+    '''Takes control of Keyboard Input'''
+    if event.char == "g":
+        toggle_grid_lines()
+
 
 def quitter(*args):
     '''Ferme le programme'''
@@ -57,15 +62,11 @@ def quitter(*args):
     racine.destroy()
 
 
-def changer_vitesse(*args):
-    '''Change la vitesse du jeu'''
-    global vitesses, vitesse_jeu
-
-    if not args or args[0].keysym == "Up":
-        vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]  
-    elif args[0].keysym == "Down":
-        vitesse_jeu = vitesses[-1] if vitesse_jeu == vitesses[0] else vitesses[vitesses.index(vitesse_jeu) - 1]
-    bouton_Vitesse.config(image = vitesse_jeu[1])
+def pause():
+    '''Met en pause le jeu'''
+    global Running
+    bouton_Start.config(image = program_icons["Play"])
+    Running = False
 
 
 def sauvegarder(file_name, position, couleurs):
@@ -98,6 +99,7 @@ def recuperer_list(text):
 
     return liste
 
+
 def charger(file_name):
     mon_fichier = open(file_name,"r")
     text = mon_fichier.readlines()
@@ -109,44 +111,12 @@ def charger(file_name):
     couleurs = recuperer_list(couleurs)
 
     return position, couleurs
-     
 
 
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
     if Running: pass
     else: fourmi_update()
-
-
-def retour(*args):
-    '''Fait retourner le jeu d'une unité de temps'''
-    global directions, refesh_counter, total_steps, fourmi_objs
-    
-    if total_steps == 0 or not fourmi_objs: return
-    else:
-        for ant in fourmi_objs:
-            
-            if ant["case_actuelle"] == "b":Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
-            else:                          Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
-
-            if   ant["direction"] == "0"  : ant ["pos"][0] = 0 if ant ["pos"][0] == nombre_case - 1 else ant ["pos"][0] + 1 # Down
-            elif ant["direction"] == "180": ant ["pos"][0] = nombre_case - 1 if ant ["pos"][0] == 0 else ant ["pos"][0] - 1 # Up
-            elif ant["direction"] == "90" : ant ["pos"][1] = nombre_case - 1 if ant ["pos"][1] == 0 else ant ["pos"][1] - 1 # Left
-            elif ant["direction"] == "-90": ant ["pos"][1] = 0 if ant ["pos"][1] == nombre_case - 1 else ant ["pos"][1] + 1 # Right
-
-            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-            change_type_case(ant, *ant["pos"])
-            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
-
-            if ant["case_actuelle"] == "b": ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
-            else:                           ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
-                                    
-
-            ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = ant["couleur"])
-            Canvas.update()  
-        total_steps -= 1; refesh_counter += 1
-        if refesh_counter > 1000: canvas_refresh(); refesh_counter = 0
-        label_steps.configure(text = f"Steps: {total_steps}")
 
 
 def start(*args):
@@ -162,17 +132,15 @@ def start(*args):
             t.sleep(vitesse_jeu[0])
 
 
-def pause():
-    '''Met en pause le jeu'''
-    global Running
-    bouton_Start.config(image = program_icons["Play"])
-    Running = False
+def changer_vitesse(*args):
+    '''Change la vitesse du jeu'''
+    global vitesses, vitesse_jeu
 
-
-def tk_key_control(event):
-    '''Takes control of Keyboard Input'''
-    if event.char == "g":
-        toggle_grid_lines()
+    if not args or args[0].keysym == "Up":
+        vitesse_jeu = vitesses[0] if vitesse_jeu == vitesses[-1] else vitesses[vitesses.index(vitesse_jeu) + 1]  
+    elif args[0].keysym == "Down":
+        vitesse_jeu = vitesses[-1] if vitesse_jeu == vitesses[0] else vitesses[vitesses.index(vitesse_jeu) - 1]
+    bouton_Vitesse.config(image = vitesse_jeu[1])
 
 
 def zoom_canvas(event):
@@ -188,13 +156,14 @@ def zoom_canvas(event):
     except AttributeError: pass
     try:
         if event == "zoom out" or event.num == 5 or event.delta == -120: # Zoom Out Canvas
-            if Canvas.winfo_reqwidth() <= nombre_case or Canvas.winfo_reqheight() <= nombre_case:
-                Width, Height = nombre_case, nombre_case
+            if Canvas.winfo_reqwidth() <= nombre_case + 150 or Canvas.winfo_reqheight() <= nombre_case + 150:
+                Width, Height = nombre_case + 100, nombre_case + 100
             else:
                 Width -= 50; Height -= 50
     except AttributeError: pass
-    Canvas.configure(width = Width, height = Height); canvas_refresh()
 
+    canvas_refresh(); Canvas.configure(width = Width, height = Height)
+    
 
 def toggle_grid_lines():
     '''Toggles the grid lines of the Canvas'''
@@ -210,8 +179,8 @@ def change_field_size(*args):
     nombre_case = int(cbox_field_taille.get()) + 1
     field       = []
     pos         = [nombre_case // 2,nombre_case // 2]
-    field       = [["w" for _ in range(nombre_case)] for _ in range(nombre_case)]
-    fourmi_objs = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "w", "couleur" : "red", "obj" : "None"}]
+    field       = [["white" for _ in range(nombre_case)] for _ in range(nombre_case)]
+    fourmi_objs = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "white", "couleur" : "red", "obj" : "None"}]
     symbol      = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
     cbox_field_taille.set(f"Taille Terrain: {cbox_field_taille.get()}x{cbox_field_taille.get()}")
     total_steps, refesh_counter = 0, 0
@@ -224,11 +193,11 @@ def change_type_case(fourmi, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
     global nombre_case
 
-    if fourmi["case_actuelle"] == "w":
-        field[y][x] = "b"
+    if fourmi["case_actuelle"] == "white":
+        field[y][x] = "black"
         Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
     else:
-        field[y][x] = "w"
+        field[y][x] = "white"
         Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
 
 
@@ -239,21 +208,17 @@ def fourmi_update():
     if fourmi_objs:
         for ant in fourmi_objs:
             # Change la directionde la fourmi
-            if ant["case_actuelle"] == "b": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
-            else:                           ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
+            if ant["case_actuelle"] == "black": ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
+            else:                               ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
         
             # Change la couleur de la case en fonction de sa couleur precedente 
             change_type_case(ant, *ant["pos"])
 
             # Bouge la fourmi en fonction de son orientation
-            if   ant["direction"] == "0":   ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up
-            # si pos y de ant est toute en haut elle redecnends tout en bas sinon elle monte d'une case
-            elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down
-            # si pos y de ant est toute en bas elle remonte toute n haut sinon elle desends d'une case 
-            elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left
-            #  si pos x de ant est toute a gauche elle repasse toute a droite sinon elle bouge d'une case vers la gauche
-            elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right
-            # si pos x de ant est toute a droite elle repasse toute a gauche sinon elle bouge d'une case vers la droite
+            if   ant["direction"] == "0":   ant["pos"][0] = nombre_case - 1 if ant["pos"][0] == 0 else ant["pos"][0] - 1 # Up    | si pos y de ant est toute en haut elle redecnends tout en bas sinon elle monte d'une case
+            elif ant["direction"] == "180": ant["pos"][0] = 0 if ant["pos"][0] == nombre_case - 1 else ant["pos"][0] + 1 # Down  | si pos y de ant est toute en bas elle remonte toute n haut sinon elle desends d'une case 
+            elif ant["direction"] == "90":  ant["pos"][1] = 0 if ant["pos"][1] == nombre_case - 1 else ant["pos"][1] + 1 # Left  | si pos x de ant est toute a gauche elle repasse toute a droite sinon elle bouge d'une case vers la gauche
+            elif ant["direction"] == "-90": ant["pos"][1] = nombre_case - 1 if ant["pos"][1] == 0 else ant["pos"][1] - 1 # Right | si pos x de ant est toute a droite elle repasse toute a gauche sinon elle bouge d'une case vers la droite
 
             # Met a jour le canvas et suvegarde la case actuelle
             ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
@@ -261,12 +226,44 @@ def fourmi_update():
             Canvas.update()
     
         total_steps += 1; refesh_counter += 1
-        if refesh_counter > 1000: canvas_refresh(); refesh_counter = 0
+        if refesh_counter > 2000: canvas_refresh(); refesh_counter = 0
         label_steps.configure(text = f"Steps: {total_steps}")
     else: 
         Running = False
         bouton_Start.config(image = program_icons["Play"])
         return
+
+
+def retour(*args):
+    '''Fait retourner le jeu d'une unité de temps'''
+    global directions, refesh_counter, total_steps, fourmi_objs
+    
+    if total_steps == 0 or not fourmi_objs: return
+    else:
+        for ant in fourmi_objs:
+            
+            if ant["case_actuelle"] == "black":Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
+            else:                              Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
+
+            if   ant["direction"] == "0"  : ant ["pos"][0] = 0 if ant ["pos"][0] == nombre_case - 1 else ant ["pos"][0] + 1 # Down
+            elif ant["direction"] == "180": ant ["pos"][0] = nombre_case - 1 if ant ["pos"][0] == 0 else ant ["pos"][0] - 1 # Up
+            elif ant["direction"] == "90" : ant ["pos"][1] = nombre_case - 1 if ant ["pos"][1] == 0 else ant ["pos"][1] - 1 # Left
+            elif ant["direction"] == "-90": ant ["pos"][1] = 0 if ant ["pos"][1] == nombre_case - 1 else ant ["pos"][1] + 1 # Right
+
+            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
+            change_type_case(ant, *ant["pos"])
+            ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
+
+            if ant["case_actuelle"] == "black": ant["direction"] = directions[0] if ant["direction"] == directions[-1] else directions[directions.index(ant["direction"]) + 1]
+            else:                               ant["direction"] = directions[-1] if ant["direction"] == directions[0] else directions[directions.index(ant["direction"]) - 1]
+                                    
+
+            ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = ant["couleur"])
+            Canvas.update()  
+        
+        total_steps -= 1; refesh_counter += 1
+        if refesh_counter > 2000: canvas_refresh(); refesh_counter = 0
+        label_steps.configure(text = f"Steps: {total_steps}")
 
 
 def canvas_refresh():
@@ -276,8 +273,7 @@ def canvas_refresh():
     Canvas.delete("all")
     for y, line in enumerate(field):
         for x, cell in enumerate(line):
-            if cell == "b":   Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "black")
-            elif cell == "w": Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = "white")
+            Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = cell)
     for fourmi in fourmi_objs:
         fourmi["obj"] = Canvas.create_rectangle(fourmi["pos"][1] * (Height / nombre_case), fourmi["pos"][0] * (Width / nombre_case), (fourmi["pos"][1] + 1) * (Height / nombre_case), (fourmi["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmi["couleur"])
 
@@ -288,40 +284,43 @@ def reset_field(*args):
 
     pause()
     fourmi_objs = []
-    field        = [["w" for _ in range(nombre_case)] for _ in range(nombre_case)]
+    field       = [["white" for _ in range(nombre_case)] for _ in range(nombre_case)]
     Canvas.delete("all"); canvas_refresh()
 
 
 def configure_creation_fourmi(*config_type):
     global symbol, pos, direction, fourmi_color, nombre_case, field, create_window
+    
+    if config_type:
+        if config_type[0] == "color":
+            fourmi_color = colorchooser.askcolor()[1]
+            config_type[1].config(bg = fourmi_color, activebackground = fourmi_color)
 
-    if config_type[0] == "color":
-        fourmi_color = colorchooser.askcolor()[1]
-        config_type[1].config(bg = fourmi_color, activebackground = fourmi_color)
+        elif config_type[0] == "add":
+            try: 
+                if int(config_type[1].get()) > nombre_case or int(config_type[1].get()) < 0: pass
+                else: pos[0] = int(config_type[1].get())
+            except ValueError: pass
+            try: 
+                if int(config_type[2].get()) > nombre_case or int(config_type[2].get()) < 0: pass
+                else: pos[1] = int(config_type[2].get())
+            except ValueError: pass
 
-    elif config_type[0] == "add":
-        try: 
-            if int(config_type[1].get()) > nombre_case or int(config_type[1].get()) < 0: pass
-            else: pos[0] = int(config_type[1].get())
-        except ValueError: pass
-        try: 
-            if int(config_type[2].get()) > nombre_case or int(config_type[2].get()) < 0: pass
-            else: pos[1] = int(config_type[2].get())
-        except ValueError: pass
+            if not config_type[3].get(): pass
+            else: direction = directions[directions.index(config_type[3].get())]
+            
 
-        if not config_type[3].get(): pass
-        else: direction = directions[directions.index(config_type[3].get())]
-        
-
-        fourmi_objs.append({"sym" : symbol, "pos" : pos, "direction" : direction, "case_actuelle" : field[pos[0]][pos[1]], "couleur" : fourmi_color, "obj" : "None"})
-        config_type[4].destroy()
-        symbol         = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
-        pos            = [nombre_case // 2, nombre_case // 2]
-        direction      = directions[0]
-        fourmi_color  = "red"
-        
-        create_window = None
-        canvas_refresh()
+            fourmi_objs.append({"sym" : symbol, "pos" : pos, "direction" : direction, "case_actuelle" : field[pos[0]][pos[1]], "couleur" : fourmi_color, "obj" : "None"})
+            config_type[4].destroy()
+            symbol         = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
+            pos            = [nombre_case // 2, nombre_case // 2]
+            direction      = directions[0]
+            fourmi_color  = "red"
+            
+            create_window = None
+            canvas_refresh()
+    else:
+        create_window.destroy(); create_window = None
 
 
 def ajout_fourmi(*args):
@@ -369,21 +368,17 @@ def ajout_fourmi(*args):
     direction_framer.pack (side = "right",  anchor = None,     fill = "x",    expand = 1,)
 
 
-    title_bar       = tk.Label      (menu_top_bar, text = f"Creation de la fourmi : {symbol + 1}", font = ("Helvetica 15 bold"), fg = "white", bg = "#3b3b3b")
-    exitbutton      = tk.Button     (menu_top_bar, width = 2, height = 1, bg = "#1b1b1b", fg = "white", activebackground = "red", activeforeground = "black", relief = "sunken", bd = 0, text = "X", command = fourmi_create_window.destroy)
-    
-    position_label  = tk.Label      (pos_framel, text = "Position Fourmi :", font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
-    posx_entry      = tk.Entry      (pos_framer, width = 10,  bg = "#3b3b3b", fg =  "white", cursor = "xterm", font = ("Helvetica 15 bold"), justify = "center", bd = 0, relief = "flat")
-    posy_entry      = tk.Entry      (pos_framer, width = 10, bg = "#3b3b3b", fg = "white",  cursor = "xterm", font = ("Helvetica 15 bold"), justify = "center", bd = 0, relief = "flat")
-    
-    couleur_label   = tk.Label      (color_framel, text = "Couleur Fourmi :", font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
-    couleur_box     = tk.Button     (color_framer, width = 6, height = 3, cursor = "hand2", relief = "sunken", bd = 0, activebackground = fourmi_color, bg = fourmi_color, command = lambda: configure_creation_fourmi("color", couleur_box))
-    
-    direction_label = tk.Label      (direction_framel, text = "Direction Fourmi :", font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
-    direction_entry = ttk.Combobox  (direction_framer, text = "Position De La Fourmi:", font = ("Helvetica 10 bold"), state = "readonly", cursor = "hand2", justify = "center", values = directions)    
-
-    cancel          = tk.Button     (menu_bottom_bar, width = 8, height = 2, cursor = "hand2", relief = "flat", font = ("Helvetica 10 bold"), text = "Cancel", command = fourmi_create_window.destroy)
-    create          = tk.Button     (menu_bottom_bar, width = 8, height = 2, cursor = "hand2", relief = "flat", font = ("Helvetica 10 bold"), text = "Create", command = lambda: configure_creation_fourmi("add", posy_entry, posx_entry, direction_entry, fourmi_create_window))
+    position_label  = tk.Label      (pos_framel,       text = "Position Fourmi :",   font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
+    direction_label = tk.Label      (direction_framel, text = "Direction Fourmi :",  font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
+    title_bar       = tk.Label      (menu_top_bar,     text = f"Creation de la fourmi : {symbol + 1}", font = ("Helvetica 15 bold"), fg = "white", bg = "#3b3b3b")
+    couleur_label   = tk.Label      (color_framel,     text = "Couleur Fourmi :",                      font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
+    posy_entry      = tk.Entry      (pos_framer,       cursor = "xterm", width = 10, font = ("Helvetica 15 bold"), fg = "white", bg = "#3b3b3b", relief = "flat", justify = "center", bd = 0)
+    posx_entry      = tk.Entry      (pos_framer,       cursor = "xterm", width = 10, font = ("Helvetica 15 bold"), fg = "white", bg = "#3b3b3b", relief = "flat", justify = "center", bd = 0)
+    direction_entry = ttk.Combobox  (direction_framer, cursor = "hand2", text = "Position De La Fourmi:", font = ("Helvetica 10 bold"), state = "readonly",  justify = "center", values = directions)
+    exitbutton      = tk.Button     (menu_top_bar,     cursor = "hand2", width = 2, height = 1, text = "X",      font = ("Helvetica 10 bold"), relief = "sunken", bd = 0, bg = "#3b3b3b", activebackground = "red",         activeforeground = "black", command = lambda: configure_creation_fourmi())
+    cancel          = tk.Button     (menu_bottom_bar,  cursor = "hand2", width = 8, height = 2, text = "Cancel", font = ("Helvetica 10 bold"), relief = "sunken", bd = 0, bg = "white",   activebackground = "red",         activeforeground = "black", command = lambda: configure_creation_fourmi())
+    create          = tk.Button     (menu_bottom_bar,  cursor = "hand2", width = 8, height = 2, text = "Create", font = ("Helvetica 10 bold"), relief = "sunken", bd = 0, bg = "white",   activebackground = "light green", activeforeground = "black", command = lambda: configure_creation_fourmi("add", posy_entry, posx_entry, direction_entry, fourmi_create_window))
+    couleur_box     = tk.Button     (color_framer,     cursor = "hand2", width = 6, height = 3, bg = fourmi_color,relief = "sunken", bd = 0, activebackground = fourmi_color, command = lambda: configure_creation_fourmi("color", couleur_box))
 
 
     exitbutton.pack      (side = "right", anchor = None,padx = 5, pady = 5)
@@ -399,7 +394,6 @@ def ajout_fourmi(*args):
     cancel.pack          (side = "right", anchor = None,padx = 5, pady = 3)
 
     fourmi_create_window.mainloop()
-
 
 
 # ========== Tkinter GUI ==========
@@ -426,18 +420,17 @@ field_frame.pack  (anchor = "s", fill = "both", expand = 1)
 
 # BOUTTONS/LABEL CREATION:
 
-bouton_Start           = tk.Button    (menu_du_haut, image = program_icons["Play"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "light green",  activebackground = "light green",  command = start)
-bouton_Retour          = tk.Button    (menu_du_haut, image = program_icons["Backwards"], relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",   activebackground = "cyan",   command = retour)
-bouton_Avancer         = tk.Button    (menu_du_haut, image = program_icons["Forwards"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",   activebackground = "cyan",   command = avancer)
-bouton_Vitesse         = tk.Button    (menu_du_haut, image = program_icons["Speed 1"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "purple", activebackground = "purple", text = "Vitesse ",          compound = "right",font = ("Impact 20"), command = changer_vitesse)
-bouton_ajout_fourmie   = tk.Button    (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "yellow", activebackground = "yellow", text = "  Ajout Fourmie  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
-bouton_zoomin          = tk.Button    (menu_du_haut, image = program_icons["Zoom In"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "white",  activebackground = "white",  command = lambda a = "zoom in" : zoom_canvas(a))
-bouton_zoomout         = tk.Button    (menu_du_haut, image = program_icons["Zoom Out"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "white",  activebackground = "white",  command = lambda a = "zoom out": zoom_canvas(a))
-bouton_Charger         = tk.Button    (menu_du_haut, image = program_icons["Load"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange", activebackground = "orange", text = "Charger ",          compound = "right", font = ("Impact 20"),command = charger)
-bouton_Sauvegarder     = tk.Button    (menu_du_haut, image = program_icons["Save"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange", activebackground = "orange", text = "Sauvegarder ",      compound = "right", font = ("Impact 20"), command = sauvegarder)
-bouton_Quitter         = tk.Button    (menu_du_haut, image = program_icons["Escape"],    relief = "sunken", bd = 0, cursor = "hand2", bg = "red",    activebackground = "red",    command = quitter)
+bouton_Start           = tk.Button    (menu_du_haut, image = program_icons["Play"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "light green",  activebackground = "dark green",  command = start)
+bouton_Retour          = tk.Button    (menu_du_haut, image = program_icons["Backwards"], relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = retour)
+bouton_Avancer         = tk.Button    (menu_du_haut, image = program_icons["Forwards"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = avancer)
+bouton_Vitesse         = tk.Button    (menu_du_haut, image = program_icons["Speed 1"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "magenta",      activebackground = "purple",      text = "Vitesse ",          compound = "right",font = ("Impact 20"), command = changer_vitesse)
+bouton_ajout_fourmie   = tk.Button    (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout Fourmie  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
+bouton_zoomin          = tk.Button    (menu_du_haut, image = program_icons["Zoom In"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom in" : zoom_canvas(a))
+bouton_zoomout         = tk.Button    (menu_du_haut, image = program_icons["Zoom Out"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom out": zoom_canvas(a))
+bouton_Charger         = tk.Button    (menu_du_haut, image = program_icons["Load"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      text = "Charger ",          compound = "right", font = ("Impact 20"), command = charger)
+bouton_Sauvegarder     = tk.Button    (menu_du_haut, image = program_icons["Save"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      text = "Sauvegarder ",      compound = "right", font = ("Impact 20"), command = sauvegarder)
+bouton_Quitter         = tk.Button    (menu_du_haut, image = program_icons["Escape"],    relief = "sunken", bd = 0, cursor = "hand2", bg = "red",          activebackground = "dark red",    command = quitter)
 cbox_field_taille      = ttk.Combobox (menu_du_haut, text = "Choisie la taille",         justify = "center", values = taille_grille, font = ("Impact 23"), state = "readonly")
-
 label_steps            = tk.Label     (field_frame,  text =  f"Step: {total_steps}", font = ("Impact 18"), fg = "white",   bg = "#2b2b2b")
 
 # BOUTTONS/LABEL PACK:
