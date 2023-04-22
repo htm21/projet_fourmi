@@ -35,9 +35,9 @@ Grid_Line      = grid_l_types[1]
 
 vitesses       = [(0.5, program_icons["Speed 1"]), (0.1, program_icons["Speed 2"]), (0, program_icons["Speed 3"])] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
 vitesse_jeu    = vitesses[0] # Vitesse du jeu
-directions     = ["0", "90", "180", "-90"] # Directions de la fourmie
+directions     = ["0", "90", "180", "-90"] # Directions de la fourmi
 
-fourmi_objs    = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "white", "couleur" : "red", "obj" : "None"}] # l'object/dictionaire fourmi = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
+fourmi_objs    = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "start_pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "start_direction" : directions[0], "case_actuelle" : "white", "couleur" : "red", "obj" : "None"}] # l'object/dictionaire fourmi = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
 
 symbol         = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
 pos            = [nombre_case // 2,nombre_case // 2]
@@ -113,6 +113,7 @@ def charger(file_name):
     return position, couleurs
 
 
+
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
     if Running: pass
@@ -149,15 +150,19 @@ def zoom_canvas(event):
 
     try:
         if event == "zoom in" or event.num == 4 or event.delta == 120: # Zoom In Canvas
+            bouton_zoomout.config(state = "active")
             if Canvas.winfo_reqwidth() >= (field_frame.winfo_width() - 150) or Canvas.winfo_reqheight() >= (field_frame.winfo_height() - 150):
                 Width, Height = Canvas.winfo_reqwidth(), Canvas.winfo_reqheight()
+                bouton_zoomin.config(state = "disabled")
             else: 
                 Width += 50; Height += 50
     except AttributeError: pass
     try:
         if event == "zoom out" or event.num == 5 or event.delta == -120: # Zoom Out Canvas
+            bouton_zoomin.config(state = "active")
             if Canvas.winfo_reqwidth() <= nombre_case + 150 or Canvas.winfo_reqheight() <= nombre_case + 150:
                 Width, Height = nombre_case + 100, nombre_case + 100
+                bouton_zoomout.config(state = "disabled")
             else:
                 Width -= 50; Height -= 50
     except AttributeError: pass
@@ -224,7 +229,7 @@ def fourmi_update():
             ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
             ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = ant["couleur"])
             Canvas.update()
-    
+
         total_steps += 1; refesh_counter += 1
         if refesh_counter > 2000: canvas_refresh(); refesh_counter = 0
         label_steps.configure(text = f"Steps: {total_steps}")
@@ -232,6 +237,7 @@ def fourmi_update():
         Running = False
         bouton_Start.config(image = program_icons["Play"])
         return
+    
 
 
 def retour(*args):
@@ -277,14 +283,21 @@ def canvas_refresh():
     for fourmi in fourmi_objs:
         fourmi["obj"] = Canvas.create_rectangle(fourmi["pos"][1] * (Height / nombre_case), fourmi["pos"][0] * (Width / nombre_case), (fourmi["pos"][1] + 1) * (Height / nombre_case), (fourmi["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmi["couleur"])
 
-   
+
 def reset_field(*args):
     '''Resets the field with no ants'''
-    global Running, field, fourmi_objs
+    global Running, field, fourmi_objs, refesh_counter
 
     pause()
-    fourmi_objs = []
-    field       = [["white" for _ in range(nombre_case)] for _ in range(nombre_case)]
+    field = [["white" for _ in range(nombre_case)] for _ in range(nombre_case)]
+    total_steps = 0
+    for fourmi in fourmi_objs:
+        fourmi["pos"] = [pos for pos in fourmi["start_pos"]]
+        fourmi["direction"] = fourmi["start_direction"]
+        fourmi["case_actuelle"] = field[fourmi["pos"][0]][fourmi["pos"][1]]
+   
+    refesh_counter = 0
+    label_steps.config(text = f"Steps: {total_steps}")
     Canvas.delete("all"); canvas_refresh()
 
 
@@ -310,7 +323,7 @@ def configure_creation_fourmi(*config_type):
             else: direction = directions[directions.index(config_type[3].get())]
             
 
-            fourmi_objs.append({"sym" : symbol, "pos" : pos, "direction" : direction, "case_actuelle" : field[pos[0]][pos[1]], "couleur" : fourmi_color, "obj" : "None"})
+            fourmi_objs.append({"sym" : symbol, "pos" : pos, "start_pos" : pos, "direction" : direction, "start_direction" : direction, "case_actuelle" : field[pos[0]][pos[1]], "couleur" : fourmi_color, "obj" : "None"})
             config_type[4].destroy()
             symbol         = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
             pos            = [nombre_case // 2, nombre_case // 2]
@@ -402,7 +415,7 @@ racine.title("La Fourmi de Langton")
 racine.iconphoto(False, program_icons["Logo"])
 racine.state("zoomed")
 racine.protocol("WM_DELETE_WINDOW", quitter)
-racine.minsize(1920, 1000)
+racine.minsize(1870, 900)
 
 # FRAMES CREATION:
 
@@ -424,14 +437,14 @@ bouton_Start           = tk.Button    (menu_du_haut, image = program_icons["Play
 bouton_Retour          = tk.Button    (menu_du_haut, image = program_icons["Backwards"], relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = retour)
 bouton_Avancer         = tk.Button    (menu_du_haut, image = program_icons["Forwards"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = avancer)
 bouton_Vitesse         = tk.Button    (menu_du_haut, image = program_icons["Speed 1"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "magenta",      activebackground = "purple",      text = "Vitesse ",          compound = "right",font = ("Impact 20"), command = changer_vitesse)
-bouton_ajout_fourmie   = tk.Button    (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout Fourmie  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
+bouton_ajout_fourmi   = tk.Button     (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout fourmi  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
 bouton_zoomin          = tk.Button    (menu_du_haut, image = program_icons["Zoom In"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom in" : zoom_canvas(a))
 bouton_zoomout         = tk.Button    (menu_du_haut, image = program_icons["Zoom Out"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom out": zoom_canvas(a))
 bouton_Charger         = tk.Button    (menu_du_haut, image = program_icons["Load"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      text = "Charger ",          compound = "right", font = ("Impact 20"), command = charger)
 bouton_Sauvegarder     = tk.Button    (menu_du_haut, image = program_icons["Save"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      text = "Sauvegarder ",      compound = "right", font = ("Impact 20"), command = sauvegarder)
 bouton_Quitter         = tk.Button    (menu_du_haut, image = program_icons["Escape"],    relief = "sunken", bd = 0, cursor = "hand2", bg = "red",          activebackground = "dark red",    command = quitter)
 cbox_field_taille      = ttk.Combobox (menu_du_haut, text = "Choisie la taille",         justify = "center", values = taille_grille, font = ("Impact 23"), state = "readonly")
-label_steps            = tk.Label     (field_frame,  text =  f"Step: {total_steps}", font = ("Impact 18"), fg = "white",   bg = "#2b2b2b")
+label_steps            = tk.Label     (field_frame,  text =  f"Step: {total_steps}",     font = ("Impact 18"), fg = "white",   bg = "#2b2b2b")
 
 # BOUTTONS/LABEL PACK:
 
@@ -439,11 +452,11 @@ bouton_Start.pack          (side = "left",  padx = 10, pady = 10, ipadx = 5, ipa
 bouton_Retour.pack         (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 0)
 bouton_Avancer.pack        (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 0)
 bouton_Vitesse.pack        (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 1)
-bouton_ajout_fourmie.pack  (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 1, anchor = "center")
+bouton_ajout_fourmi.pack   (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 1, anchor = "center")
 bouton_zoomin.pack         (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 0)
 bouton_zoomout.pack        (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 0)
 cbox_field_taille.pack     (side = "left",  padx = 10, pady = 10, ipadx = 5, ipady = 15, expand = 0)
-separator_frame.pack       (side = "left", expand = 1, fill = "both")
+separator_frame.pack       (side = "left",  expand = 1, fill = "both")
 bouton_Quitter.pack        (side = "right", padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 1, anchor = "e")
 bouton_Sauvegarder.pack    (side = "right", padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 0)
 bouton_Charger.pack        (side = "right", padx = 10, pady = 10, ipadx = 5, ipady = 5, expand = 0)
