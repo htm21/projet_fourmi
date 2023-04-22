@@ -27,18 +27,16 @@ create_window  = None
 refesh_counter = 0
 total_steps    = 0
 Height, Width  = 650, 650 # Dimensions du canvas
-taille_grille  = [4, 10, 20, 30, 50, 70, 100, 150, 200, 500] # Tailles Du Terrain
+taille_grille  = [10, 20, 30, 50, 70, 100, 150, 200, 500] # Tailles Du Terrain
 nombre_case    = taille_grille[4] + 1 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field          = [["white" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 50x50 remplie de "w"
 grid_l_types   = ["", "black"]
 Grid_Line      = grid_l_types[1]
-
 vitesses       = [(0.5, program_icons["Speed 1"]), (0.1, program_icons["Speed 2"]), (0, program_icons["Speed 3"])] # Les differantes vitesses du jeu | num = temps de sleep, txt = text du boutton
 vitesse_jeu    = vitesses[0] # Vitesse du jeu
 directions     = ["0", "90", "180", "-90"] # Directions de la fourmi
 
 fourmi_objs    = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "start_pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "start_direction" : directions[0], "case_actuelle" : "white", "couleur" : "red", "obj" : "None"}] # l'object/dictionaire fourmi = symbole | position | direction | case actuelle | couleur | canvas.rectangle int
-
 symbol         = fourmi_objs[-1]["sym"] + 1 if fourmi_objs else 0
 pos            = [nombre_case // 2,nombre_case // 2]
 direction      = directions[0]
@@ -67,6 +65,7 @@ def pause():
     global Running
     bouton_Start.config(image = program_icons["Play"])
     Running = False
+
 
 
 def sauvegarder(file_name, position, couleurs):
@@ -98,7 +97,6 @@ def recuperer_list(text):
         liste[i] = eval(liste[i])
 
     return liste
-
 
 def charger(file_name):
     mon_fichier = open(file_name,"r")
@@ -239,7 +237,6 @@ def fourmi_update():
         return
     
 
-
 def retour(*args):
     '''Fait retourner le jeu d'une unité de temps'''
     global directions, refesh_counter, total_steps, fourmi_objs
@@ -341,17 +338,18 @@ def ajout_fourmi(*args):
     global fourmi_color, pos, nombre_case, directions, create_window
 
     pause()
+
     fourmi_create_window = tk.Tk()
     create_window = fourmi_create_window
+    width, height = 900, 550
     fourmi_create_window.title("Configuration de la Fourmi")
-    width, height = 1000, 700
-    screen_width, screen_height  = fourmi_create_window.winfo_screenwidth(), fourmi_create_window.winfo_screenheight()
-    x, y = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
-    fourmi_create_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
-    fourmi_create_window.resizable(False,False)
-    if platform.system() == "Windows": fourmi_create_window.overrideredirect(1); fourmi_create_window.wm_attributes("-topmost", 1); ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    fourmi_create_window.geometry(f"{width}x{height}")
+    fourmi_create_window.overrideredirect(True)
+    fourmi_create_window.eval('tk::PlaceWindow . center')
+    fourmi_create_window.wm_attributes("-topmost", True)
+    fourmi_create_window.resizable(False, False)
 
-    main_frame      = tk.Frame(fourmi_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
+    main_frame       = tk.Frame(fourmi_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
 
     menu_top_bar     = tk.Frame(main_frame,      bg = "#3b3b3b")
     menu_creation    = tk.Frame(main_frame,      bg = "#1b1b1b")
@@ -396,12 +394,12 @@ def ajout_fourmi(*args):
 
     exitbutton.pack      (side = "right", anchor = None,padx = 5, pady = 5)
     title_bar.pack       (side = None,    anchor = "center", fill = "x")
-    position_label.pack  (side = "left",padx = 30)
+    position_label.pack  (side = "left",  padx = 30)
     posx_entry.pack      (side = "left",  fill = "x", expand = 1, ipady = 10)
     posy_entry.pack      (side = "right", fill = "x", expand = 1, ipady = 10, padx = 30)
-    couleur_label.pack   (side = "left",padx = 30)
+    couleur_label.pack   (side = "left",  padx = 30)
     couleur_box.pack     (side = None,    anchor = "center",padx = 145)
-    direction_label.pack (side = "left",padx = 30)
+    direction_label.pack (side = "left",  padx = 30)
     direction_entry.pack (side = None,    anchor = "center", ipady = 10, fill = "y", expand = 1)
     create.pack          (side = "right", anchor = None,padx = 5, pady = 3)
     cancel.pack          (side = "right", anchor = None,padx = 5, pady = 3)
@@ -437,7 +435,7 @@ bouton_Start           = tk.Button    (menu_du_haut, image = program_icons["Play
 bouton_Retour          = tk.Button    (menu_du_haut, image = program_icons["Backwards"], relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = retour)
 bouton_Avancer         = tk.Button    (menu_du_haut, image = program_icons["Forwards"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = avancer)
 bouton_Vitesse         = tk.Button    (menu_du_haut, image = program_icons["Speed 1"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "magenta",      activebackground = "purple",      text = "Vitesse ",          compound = "right",font = ("Impact 20"), command = changer_vitesse)
-bouton_ajout_fourmi   = tk.Button     (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout fourmi  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
+bouton_ajout_fourmi    = tk.Button     (menu_du_haut, image = program_icons["Add Ant"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout fourmi  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
 bouton_zoomin          = tk.Button    (menu_du_haut, image = program_icons["Zoom In"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom in" : zoom_canvas(a))
 bouton_zoomout         = tk.Button    (menu_du_haut, image = program_icons["Zoom Out"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom out": zoom_canvas(a))
 bouton_Charger         = tk.Button    (menu_du_haut, image = program_icons["Load"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      text = "Charger ",          compound = "right", font = ("Impact 20"), command = charger)
