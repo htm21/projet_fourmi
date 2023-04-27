@@ -414,6 +414,19 @@ def ajout_fourmi(*args):
     cancel.pack          (side = "right", anchor = None, padx = 5, pady = 3)
 
     fourmi_create_window.mainloop()
+    
+
+def fermer_fenetre():
+    fenetre.destroy()
+
+def help():
+    fenetre2 = tk.Tk()
+fenetre2.title(" Notice et Regles du Jeu de la Fourmi de Langton")
+fenetre2.geometrey("800x200")
+fenetre2['bg'] = "LemonChiffon2"
+label = tk.Label(fenetre2, fg = "black", text = "la forumi de langton est un automate cellulaire composé d'une grille à deux dimensions et d'une fourmi. Dans ce projet, il faudra implementer une interface graphique à l'aide de la bibliotheque Tkinter permettant d'afficher le comportement de cette automate.
+label.pack()
+fenetre2.mainloop()
 
 
 # ========== Tkinter GUI ==========
