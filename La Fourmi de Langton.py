@@ -351,7 +351,7 @@ def ajout_fourmi(*args):
     fourmi_create_window = tk.Tk()
     create_window = fourmi_create_window
     fourmi_create_window.title("Configuration de la Fourmi")
-    width, height = 1000, 700
+    width, height = 900, 500
     screen_width, screen_height  = fourmi_create_window.winfo_screenwidth(), fourmi_create_window.winfo_screenheight()
     x, y = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
     fourmi_create_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
@@ -409,9 +409,9 @@ def ajout_fourmi(*args):
     couleur_label.pack   (side = "left",padx = 30)
     couleur_box.pack     (side = None,    anchor = "center",padx = 145)
     direction_label.pack (side = "left",padx = 30)
-    direction_entry.pack (side = None,    anchor = "center", ipady = 10, fill = "y", expand = 1)
-    create.pack          (side = "right", anchor = None,padx = 5, pady = 3)
-    cancel.pack          (side = "right", anchor = None,padx = 5, pady = 3)
+    direction_entry.pack (side = None,    anchor = "center", padx = 100, ipady = 10, fill = "y", expand = 1)
+    create.pack          (side = "right", anchor = None, padx = 5, pady = 3)
+    cancel.pack          (side = "right", anchor = None, padx = 5, pady = 3)
 
     fourmi_create_window.mainloop()
 
