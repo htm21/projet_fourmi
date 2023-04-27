@@ -15,18 +15,11 @@ else: racine.tk.call('tk', 'scaling', 0.5) # solution temp pour mac
 
 icon_names = ["Logo", "Pause", "Play", "Backwards", "Forwards", "Speed 1", "Speed 2", "Speed 3", "Add Ant", "Zoom In", "Zoom Out", "Load", "Save", "Escape", "Stop", "Cross"] # Nom des Icones
 program_icons = dict(zip(icon_names, [None] * len(icon_names))) # dictionaire avec {Nom Icone : tk.photoImage(icone)}  
+
 program_folder_path = os.path.dirname(__file__)
+for icon in program_icons: #insère le tk.PhotoImage dans la clé/nom correspondant dans program_icons
+    program_icons[icon] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon + ".png"))
 
-program_icons["Logo"] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", "Logo" + ".png"))
-
-if platform.system() == "Windows" or platform.system() == "Linux": #insère le tk.PhotoImage dans la clé/nom correspondant dans program_icons
-    for icon in program_icons:
-        program_icons[icon] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon + ".png"))
-else: 
-    for icon in program_icons:
-        temp_icon = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon + ".png"))
-        resized_icon = temp_icon.subsample(2, 2)
-        program_icons[icon] = resized_icon
 
 # ================== Var ====================
 
