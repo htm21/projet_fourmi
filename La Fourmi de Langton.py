@@ -7,19 +7,26 @@ print("\033c")
 
 racine = tk.Tk()
 
-if platform.system() == "Windows" or platform.system() == "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1) # contourne la mise à l'échelle de l'affichage de windows et linux
+if platform.system() == "Windows" or platform.system() == "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1)# contourne la mise à l'échelle de l'affichage de windows et linux
 else: racine.tk.call('tk', 'scaling', 0.5) # solution temp pour mac
 
 
 # ========== Chargement des Icones ==========
 
-icon_names = ["Logo","Pause", "Play", "Backwards", "Forwards", "Speed 1", "Speed 2", "Speed 3", "Add Ant", "Zoom In", "Zoom Out", "Load", "Save", "Escape", "Stop", "Cross"] # Nom des Icones
+icon_names = ["Logo", "Pause", "Play", "Backwards", "Forwards", "Speed 1", "Speed 2", "Speed 3", "Add Ant", "Zoom In", "Zoom Out", "Load", "Save", "Escape", "Stop", "Cross"] # Nom des Icones
 program_icons = dict(zip(icon_names, [None] * len(icon_names))) # dictionaire avec {Nom Icone : tk.photoImage(icone)}  
+program_folder_path = os.path.dirname(__file__)
 
-program_folder_path = os.path.dirname(__file__) #insère le tk.PhotoImage dans la clé/nom correspondant dans program_icons
-for icon in program_icons:
-    icon_file = icon + ".png"
-    program_icons[icon] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon_file))
+program_icons["Logo"] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", "Logo" + ".png"))
+
+if platform.system() == "Windows" or platform.system() == "Linux": #insère le tk.PhotoImage dans la clé/nom correspondant dans program_icons
+    for icon in program_icons:
+        program_icons[icon] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon + ".png"))
+else: 
+    for icon in program_icons:
+        temp_icon = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon + ".png"))
+        resized_icon = temp_icon.subsample(2, 2)
+        program_icons[icon] = resized_icon
 
 # ================== Var ====================
 
@@ -351,17 +358,16 @@ def ajout_fourmi(*args):
     pause()
     fourmi_create_window = tk.Tk()
     create_window = fourmi_create_window
-    fourmi_create_window.title("Configuration de la Fourmi")
     width, height = 900, 500
-    screen_width, screen_height  = fourmi_create_window.winfo_screenwidth(), fourmi_create_window.winfo_screenheight()
-    x, y = (screen_width/2) - (width/2), (screen_height/2) - (height/2)
-    fourmi_create_window.geometry('%dx%d+%d+%d' % (width, height, x, y))
+    fourmi_create_window.title("Configuration de la Fourmi")
+    fourmi_create_window.geometry(f"{width}x{height}")
+    fourmi_create_window.wm_attributes("-topmost", True)
+    fourmi_create_window.eval("tk::PlaceWindow . center")
     fourmi_create_window.resizable(False,False)
-    if platform.system() == "Windows": fourmi_create_window.overrideredirect(1); fourmi_create_window.wm_attributes("-topmost", 1); ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    fourmi_create_window.protocol("WM_DELETE_WINDOW", lambda: configure_creation_fourmi())
 
     main_frame      = tk.Frame(fourmi_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
 
-    menu_top_bar     = tk.Frame(main_frame,      bg = "#3b3b3b")
     menu_creation    = tk.Frame(main_frame,      bg = "#1b1b1b")
     menu_bottom_bar  = tk.Frame(main_frame,      bg = "#1b1b1b")
     pos_frame        = tk.Frame(menu_creation,   bg = "#1b1b1b")
@@ -375,7 +381,6 @@ def ajout_fourmi(*args):
     direction_framer = tk.Frame(direction_frame, bg = "#1b1b1b")
 
     main_frame.pack       (side = None,     anchor = None,     fill = "both", expand = 1)
-    menu_top_bar.pack     (side = None,     anchor = "n",      fill = "both", expand = 0)
     menu_creation.pack    (side = None,     anchor = "center", fill = "both", expand = 1)
     menu_bottom_bar.pack  (side = None,     anchor = "s",      fill = "both", expand = 0)
     pos_frame.pack        (side = None,     anchor = "center", fill = "both", expand = 1, pady = 10)
@@ -391,19 +396,14 @@ def ajout_fourmi(*args):
 
     position_label  = tk.Label     (pos_framel,       text = "Position Fourmi :",   font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
     direction_label = tk.Label     (direction_framel, text = "Direction Fourmi :",  font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
-    title_bar       = tk.Label     (menu_top_bar,     text = f"Creation de la fourmi : {symbol + 1}", font = ("Helvetica 15 bold"), fg = "white", bg = "#3b3b3b")
     couleur_label   = tk.Label     (color_framel,     text = "Couleur Fourmi :",                      font = ("Helvetica 25 bold"), fg = "white", bg = "#1b1b1b")
     posy_entry      = tk.Entry     (pos_framer,       cursor = "xterm", width = 10, font = ("Helvetica 15 bold"), fg = "white", bg = "#3b3b3b", relief = "flat", justify = "center", bd = 0)
     posx_entry      = tk.Entry     (pos_framer,       cursor = "xterm", width = 10, font = ("Helvetica 15 bold"), fg = "white", bg = "#3b3b3b", relief = "flat", justify = "center", bd = 0)
     direction_entry = ttk.Combobox (direction_framer, cursor = "hand2", text = "Position De La Fourmi:", font = ("Helvetica 10 bold"), state = "readonly",  justify = "center", values = directions)
-    exitbutton      = tk.Button    (menu_top_bar,     cursor = "hand2", width = 2, height = 1, text = "X",      font = ("Helvetica 10 bold"), relief = "sunken", bd = 0, bg = "#3b3b3b", activebackground = "red",         activeforeground = "black", command = lambda: configure_creation_fourmi())
     cancel          = tk.Button    (menu_bottom_bar,  cursor = "hand2", width = 8, height = 2, text = "Cancel", font = ("Helvetica 10 bold"), relief = "sunken", bd = 0, bg = "white",   activebackground = "red",         activeforeground = "black", command = lambda: configure_creation_fourmi())
     create          = tk.Button    (menu_bottom_bar,  cursor = "hand2", width = 8, height = 2, text = "Create", font = ("Helvetica 10 bold"), relief = "sunken", bd = 0, bg = "white",   activebackground = "light green", activeforeground = "black", command = lambda: configure_creation_fourmi("add", posy_entry, posx_entry, direction_entry, fourmi_create_window))
     couleur_box     = tk.Button    (color_framer,     cursor = "hand2", width = 6, height = 3, bg = fourmi_color,relief = "sunken", bd = 0, activebackground = fourmi_color, command = lambda: configure_creation_fourmi("color", couleur_box))
 
-
-    exitbutton.pack      (side = "right", anchor = None,padx = 5, pady = 5)
-    title_bar.pack       (side = None,    anchor = "center", fill = "x")
     position_label.pack  (side = "left",  padx = 30)
     posx_entry.pack      (side = "left",  fill = "x", expand = 1, ipady = 10)
     posy_entry.pack      (side = "right", fill = "x", expand = 1, ipady = 10, padx = 30)
@@ -419,7 +419,7 @@ def ajout_fourmi(*args):
 # ========== Tkinter GUI ==========
 
 racine.title("La Fourmi de Langton")
-racine.iconphoto(False, program_icons["Logo"])
+racine.iconphoto(True, program_icons["Logo"])
 racine.state("zoomed")
 racine.protocol("WM_DELETE_WINDOW", quitter)
 racine.minsize(1870, 900)
@@ -443,14 +443,14 @@ field_frame.pack  (anchor = "s",      fill = "both", expand = 1)
 bouton_Start           = tk.Button    (menu_du_haut, image = program_icons["Play"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "light green",  activebackground = "dark green",  command = start)
 bouton_Retour          = tk.Button    (menu_du_haut, image = program_icons["Backwards"], relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = retour)
 bouton_Avancer         = tk.Button    (menu_du_haut, image = program_icons["Forwards"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = avancer)
-bouton_Vitesse         = tk.Button    (menu_du_haut, image = program_icons["Speed 1"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "magenta",      activebackground = "purple",      text = "Vitesse ",          compound = "right",font = ("Impact 20"), command = changer_vitesse)
+bouton_Vitesse         = tk.Button    (menu_du_haut, image = program_icons["Speed 1"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "magenta",      activebackground = "purple",      text = "Vitesse ",         compound = "right",font = ("Impact 20"), command = changer_vitesse)
 bouton_ajout_fourmi   = tk.Button     (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout fourmi  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
 bouton_zoomin          = tk.Button    (menu_du_haut, image = program_icons["Zoom In"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom in" : zoom_canvas(a))
 bouton_zoomout         = tk.Button    (menu_du_haut, image = program_icons["Zoom Out"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom out": zoom_canvas(a))
-bouton_Charger         = tk.Button    (menu_du_haut, image = program_icons["Load"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      text = "Charger ",          compound = "right", font = ("Impact 20"), command = charger)
-bouton_Sauvegarder     = tk.Button    (menu_du_haut, image = program_icons["Save"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      text = "Sauvegarder ",      compound = "right", font = ("Impact 20"), command = sauvegarder)
+bouton_Charger         = tk.Button    (menu_du_haut, image = program_icons["Load"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      command = charger)
+bouton_Sauvegarder     = tk.Button    (menu_du_haut, image = program_icons["Save"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      command = sauvegarder)
 bouton_Quitter         = tk.Button    (menu_du_haut, image = program_icons["Escape"],    relief = "sunken", bd = 0, cursor = "hand2", bg = "red",          activebackground = "dark red",    command = quitter)
-cbox_field_taille      = ttk.Combobox (menu_du_haut, text = "Choisie la taille",         justify = "center", values = taille_grille, font = ("Impact 23"), state = "readonly")
+cbox_field_taille      = ttk.Combobox (menu_du_haut, text = "Choisie la taille",         justify = "center", values = taille_grille, font = ("Impact 25"), state = "readonly")
 label_steps            = tk.Label     (field_frame,  text =  f"Step: {total_steps}",     font = ("Impact 18"), fg = "white",   bg = "#2b2b2b")
 
 # BOUTTONS/LABEL PACK:
