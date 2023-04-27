@@ -7,7 +7,7 @@ print("\033c")
 
 racine = tk.Tk()
 
-if platform.system() == "Windows" or platform.system() == "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1) # contourne la mise à l'échelle de l'affichage de windos et linux
+if platform.system() == "Windows" or platform.system() == "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1) # contourne la mise à l'échelle de l'affichage de windows et linux
 else: racine.tk.call('tk', 'scaling', 0.5) # solution temp pour mac
 
 
@@ -30,7 +30,7 @@ refesh_counter = 0 # étapes jusqu'à l'actualisation du canvas
 total_steps    = 0 # nombres de steps que la fourmie fait depuis l'etat initial
 Height, Width  = 650, 650 # Dimensions du canvas
 taille_grille  = [10, 20, 30, 50, 70, 100, 150, 200, 500] # Tailles Du Terrain
-nombre_case    = taille_grille[4] + 1 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
+nombre_case    = taille_grille[3] + 1 # Nombre de cases dans le jeu | Doit etre impaire si on veut un milieu
 field          = [["white" for _ in range(nombre_case)] for cell in range(nombre_case)] # liste 2D 50x50 remplie de "w"
 grid_l_types   = ["", "black"] # symbole des types de la grille du canvas
 Grid_Line      = grid_l_types[1] # symbole de deafaut de la grille du canvas
@@ -184,7 +184,6 @@ def change_field_size(*args):
     global field, fourmi_objs, nombre_case, pos, symbol, total_steps, refesh_counter
 
     nombre_case = int(cbox_field_taille.get()) + 1
-    field       = []
     pos         = [nombre_case // 2,nombre_case // 2]
     field       = [["white" for _ in range(nombre_case)] for _ in range(nombre_case)]
     fourmi_objs = [{"sym" : 0, "pos" : [nombre_case // 2,nombre_case // 2], "direction" : directions[0], "case_actuelle" : "white", "couleur" : "red", "obj" : "None"}]
@@ -405,31 +404,17 @@ def ajout_fourmi(*args):
 
     exitbutton.pack      (side = "right", anchor = None,padx = 5, pady = 5)
     title_bar.pack       (side = None,    anchor = "center", fill = "x")
-    position_label.pack  (side = "left",padx = 30)
+    position_label.pack  (side = "left",  padx = 30)
     posx_entry.pack      (side = "left",  fill = "x", expand = 1, ipady = 10)
     posy_entry.pack      (side = "right", fill = "x", expand = 1, ipady = 10, padx = 30)
-    couleur_label.pack   (side = "left",padx = 30)
-    couleur_box.pack     (side = None,    anchor = "center",padx = 145)
-    direction_label.pack (side = "left",padx = 30)
+    couleur_label.pack   (side = "left",  padx = 30)
+    couleur_box.pack     (side = None,    anchor = "center", padx = 145)
+    direction_label.pack (side = "left",  padx = 30)
     direction_entry.pack (side = None,    anchor = "center", padx = 100, ipady = 10, fill = "y", expand = 1)
     create.pack          (side = "right", anchor = None, padx = 5, pady = 3)
     cancel.pack          (side = "right", anchor = None, padx = 5, pady = 3)
 
     fourmi_create_window.mainloop()
-    
-
-def fermer_fenetre():
-    fenetre.destroy()
-
-def help():
-    fenetre2 = tk.Tk()
-fenetre2.title(" Notice et Regles du Jeu de la Fourmi de Langton")
-fenetre2.geometrey("800x200")
-fenetre2['bg'] = "LemonChiffon2"
-label = tk.Label(fenetre2, fg = "black", text = "la forumi de langton est un automate cellulaire composé d'une grille à deux dimensions et d'une fourmi. Dans ce projet, il faudra implementer une interface graphique à l'aide de la bibliotheque Tkinter permettant d'afficher le comportement de cette automate.
-label.pack()
-fenetre2.mainloop()
-
 
 # ========== Tkinter GUI ==========
 
@@ -449,8 +434,8 @@ separator_frame = tk.Frame (menu_du_haut, bg = "#1b1b1b")
 # FRAMES PACK:
 
 Main_Frame.pack   (anchor = "center", fill = "both", expand = 1)
-menu_du_haut.pack (anchor = "n", fill = "x",    expand = 0)
-field_frame.pack  (anchor = "s", fill = "both", expand = 1)
+menu_du_haut.pack (anchor = "n",      fill = "x",    expand = 0)
+field_frame.pack  (anchor = "s",      fill = "both", expand = 1)
 
 
 # BOUTTONS/LABEL CREATION:
