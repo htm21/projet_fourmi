@@ -193,6 +193,11 @@ def change_field_size(*args):
     Main_Frame.focus() 
     canvas_refresh(); Canvas.update()
 
+def del_fourmi(*args):
+    global fourmi_objs
+    
+    fourmi_objs.remove(args[1])
+    canvas_refresh(); Canvas.update()
 
 def change_type_case(fourmi, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
@@ -228,6 +233,7 @@ def fourmi_update():
             # Met a jour le canvas et suvegarde la case actuelle
             ant["case_actuelle"] = field[ant["pos"][0]][ant["pos"][1]]
             ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = ant["couleur"])
+            Canvas.tag_bind(ant["obj"],"<Button-3>", lambda x, fourmi = ant: del_fourmi(x, fourmi))
             Canvas.update()
 
         total_steps += 1; refesh_counter += 1
@@ -265,6 +271,7 @@ def retour(*args):
                                     
 
             ant["obj"] = Canvas.create_rectangle(ant["pos"][1] * (Height / nombre_case), ant["pos"][0] * (Width / nombre_case), (ant["pos"][1] + 1) * (Height / nombre_case), (ant["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = ant["couleur"])
+            Canvas.tag_bind(ant["obj"],"<Button-3>", lambda x, fourmi = ant: del_fourmi(x, fourmi))
             Canvas.update()  
         
         total_steps -= 1; refesh_counter += 1
@@ -282,7 +289,7 @@ def canvas_refresh():
             Canvas.create_rectangle(x * (Height / nombre_case), y * (Width / nombre_case), (x + 1) * (Height / nombre_case), (y + 1) * (Width / nombre_case), outline = Grid_Line, fill = cell)
     for fourmi in fourmi_objs:
         fourmi["obj"] = Canvas.create_rectangle(fourmi["pos"][1] * (Height / nombre_case), fourmi["pos"][0] * (Width / nombre_case), (fourmi["pos"][1] + 1) * (Height / nombre_case), (fourmi["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmi["couleur"])
-
+        Canvas.tag_bind(fourmi["obj"],"<Button-3>", lambda x, fourmi = fourmi: del_fourmi(x, fourmi))
 
 def reset_field(*args):
     '''Resets the field with no ants'''
@@ -298,7 +305,7 @@ def reset_field(*args):
    
     refesh_counter = 0
     label_steps.config(text = f"Steps: {total_steps}")
-    Canvas.delete("all"); canvas_refresh()
+    canvas_refresh()
 
 
 def configure_creation_fourmi(*config_type):
