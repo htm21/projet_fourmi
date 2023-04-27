@@ -71,50 +71,34 @@ def pause():
     Running = False
 
 
-def sauvegarder(file_name, position, couleurs):
-    mon_fichier = open(file_name,"w")
-    text = [str(position) + "\n", str(couleurs)]
-    mon_fichier.writelines(text)
-    mon_fichier.close()
+def charger(*args):
+    '''Ouvre une fenetre pour charger un fichier txt qui a une sauvegarede d'un jeu'''
+    global fourmi_objs, field, total_steps, nombre_case, Running
 
-    print(text)
-
-def recuperer_tuple(text):
-    ## Retirer les parentheses et les virgules
-    text = text.replace("(", "")
-    text = text.replace(")", "")
-
-    text = text.split(", ")
-
-    text = (int(text[0]), int(text[1]))
-
-    return text
-
-def recuperer_list(text):
-    ## Retirer les crochets
-    text = text.replace("[", "")
-    text = text.replace("]", "")
-
-    liste = text.split(", ")
-    for i in range(len(liste)):
-        liste[i] = eval(liste[i])
-
-    return liste
+    if Running: pause()
+    fichier = filedialog.askopenfilename(title = "Charger une partie", filetypes = (('Text Document', '*.txt'),("Tous les fichiers", "*.*")))
+    if fichier:
+        with open(fichier, "r") as f:
+            save_file   = f.read().replace("'", '"')
+            fourmi_objs = json.loads(save_file[save_file.index("fourmis\n\n") + len("fourmis\n\n") : save_file.index("\n\n// Etat")])
+            field       = json.loads(save_file[save_file.index("Terrain\n\n") + len("Terrain\n\n") : save_file.index("\n\n// Variables")])
+            total_steps , nombre_case = json.loads(save_file[save_file.index("Variables\n\n") + len("Variables\n\n") : save_file.index("\n\nEnd")])
+    label_steps.config(text = f"Step: {total_steps}")
+    cbox_field_taille.set(f"Taille Terrain: {nombre_case - 1}x{nombre_case - 1}")
+    canvas_refresh(); Canvas.update()
 
 
-def charger(file_name):
-    mon_fichier = open(file_name,"r")
-    text = mon_fichier.readlines()
-    mon_fichier.close()
+def sauvegarder(*args): 
+    '''Ouvre une fenetre pour savegarder la parie en cours'''
+    global Running
 
-    position, couleurs = text
-    
-    position = recuperer_tuple(position)
-    couleurs = recuperer_list(couleurs)
-
-    return position, couleurs
-
-
+    if Running: pause()
+    fichier = filedialog.asksaveasfile(filetypes = [('Text Document', '*.txt')], defaultextension = [('Text Document', '*.txt')])
+    if fichier:
+        with open(fichier.name, "w") as f:
+            f.write(f"// Object fourmis\n\n{fourmi_objs}\n\n")
+            f.write(f"// Etat du Terrain\n\n{field}\n\n")
+            f.write(f"// Variables\n\n{[total_steps, nombre_case]}\n\nEnd")
 
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
