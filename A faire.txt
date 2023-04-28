@@ -1,10 +1,9 @@
 Choses a faire:
 
-1) La fonction retour ⏳
+1) La fonction retour ✅
 2) Les fonctions charger | sauvegarder ⏳
 3) Rajouter plusieurs fourmies au terrain ✅
 4) Rajouter differantes interactions pour les cases ✅
 5) Rajouter des icones au lieu du texte ✅
 6) Rajouter un logo au programme ✅
 7) Uniformiser le code
-8) Convertir le programme en executable (.exe)
