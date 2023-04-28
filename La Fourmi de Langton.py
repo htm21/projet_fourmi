@@ -17,7 +17,7 @@ icon_names = ["Logo", "Pause", "Play", "Backwards", "Forwards", "Speed 1", "Spee
 program_icons = dict(zip(icon_names, [None] * len(icon_names))) # dictionaire avec {Nom Icone : tk.photoImage(icone)}  
 
 program_folder_path = os.path.dirname(__file__) #inspiration : https://stackoverflow.com/questions/61485360/opening-a-file-from-other-directory-in-python
-for icon in program_icons: #insère le tk.PhotoImage dans la clé/nom correspondant dans program_icons            
+for icon in program_icons: #insère le tk.PhotoImage dans la clé/nom correspondant dans program_icons
     program_icons[icon] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon + ".png"))
 
 
@@ -230,6 +230,7 @@ def fourmi_update():
         return
     
 
+
 def retour(*args):
     '''Fait retourner le jeu d'une unité de temps'''
     global directions, refesh_counter, total_steps, fourmi_objs
@@ -332,7 +333,6 @@ def ajout_fourmi(*args):
     global fourmi_color, pos, nombre_case, directions, create_window
 
     pause()
-
     fourmi_create_window = tk.Tk()
     create_window = fourmi_create_window
     width, height = 900, 500
@@ -343,7 +343,7 @@ def ajout_fourmi(*args):
     fourmi_create_window.resizable(False,False)
     fourmi_create_window.protocol("WM_DELETE_WINDOW", lambda: configure_creation_fourmi())
 
-    main_frame       = tk.Frame(fourmi_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
+    main_frame      = tk.Frame(fourmi_create_window, bg = "#1b1b1b", highlightbackground = "#3b3b3b", highlightthickness = 7)
 
     menu_creation    = tk.Frame(main_frame,      bg = "#1b1b1b")
     menu_bottom_bar  = tk.Frame(main_frame,      bg = "#1b1b1b")
@@ -421,7 +421,7 @@ bouton_Start           = tk.Button    (menu_du_haut, image = program_icons["Play
 bouton_Retour          = tk.Button    (menu_du_haut, image = program_icons["Backwards"], relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = retour)
 bouton_Avancer         = tk.Button    (menu_du_haut, image = program_icons["Forwards"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "cyan",         activebackground = "dark cyan",   command = avancer)
 bouton_Vitesse         = tk.Button    (menu_du_haut, image = program_icons["Speed 1"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "magenta",      activebackground = "purple",      text = "Vitesse ",         compound = "right",font = ("Impact 20"), command = changer_vitesse)
-bouton_ajout_fourmi    = tk.Button    (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout fourmi  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
+bouton_ajout_fourmi   = tk.Button     (menu_du_haut, image = program_icons["Add Ant"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "light yellow", activebackground = "yellow",      text = "  Ajout fourmi  ", compound = "left", font = ("Impact 20"), command = ajout_fourmi)
 bouton_zoomin          = tk.Button    (menu_du_haut, image = program_icons["Zoom In"],   relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom in" : zoom_canvas(a))
 bouton_zoomout         = tk.Button    (menu_du_haut, image = program_icons["Zoom Out"],  relief = "sunken", bd = 0, cursor = "hand2", bg = "white",        activebackground = "white",       command = lambda a = "zoom out": zoom_canvas(a))
 bouton_Charger         = tk.Button    (menu_du_haut, image = program_icons["Load"],      relief = "sunken", bd = 0, cursor = "hand2", bg = "orange",       activebackground = "orange",      command = charger)
