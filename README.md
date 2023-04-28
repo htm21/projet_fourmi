@@ -22,7 +22,6 @@ L'objectif de ce projet repose sur la création de *"La Fourmi de Langton"*, un 
 - Implémentation des différentes fonctions de l'étape précédente à l'interface graphique (c'est à dire l’assignation de chaque bouton à une fonction bien précise)
 - Focalisation sur la partie "Pour allez plus loin"
 
-Le "brouillon" permettant de retranscrire des idées de code est lié au fichier **test.py**, le code final et propre sur le fichier                    **La Fourmi de Langton.py**
 
 # LE CODE - La Fourmi de Langton.py
 \
