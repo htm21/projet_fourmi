@@ -10,16 +10,14 @@ racine = tk.Tk()
 if platform.system() == "Windows" or platform.system() == "Linux": ctypes.windll.shcore.SetProcessDpiAwareness(1)# contourne la mise à l'échelle de l'affichage de windows et linux
 else: racine.tk.call('tk', 'scaling', 0.5) # solution temp pour mac
 
-
 # ========== Chargement des Icones ==========
 
 icon_names = ["Logo", "Pause", "Play", "Backwards", "Forwards", "Speed 1", "Speed 2", "Speed 3", "Add Ant", "Zoom In", "Zoom Out", "Load", "Save", "Escape", "Stop", "Cross"] # Nom des Icones
 program_icons = dict(zip(icon_names, [None] * len(icon_names))) # dictionaire avec {Nom Icone : tk.photoImage(icone)}  
 
-program_folder_path = os.path.dirname(__file__) #inspiration : https://stackoverflow.com/questions/61485360/opening-a-file-from-other-directory-in-python
+program_folder_path = os.path.dirname(__file__) # inspiration : https://stackoverflow.com/questions/61485360/opening-a-file-from-other-directory-in-python
 for icon in program_icons: #insère le tk.PhotoImage dans la clé/nom correspondant dans program_icons
     program_icons[icon] = tk.PhotoImage(file = os.path.join(program_folder_path, "Icons", icon + ".png"))
-
 
 # ================== Var ====================
 
@@ -100,6 +98,7 @@ def sauvegarder(*args):
             f.write(f"// Etat du Terrain\n\n{field}\n\n")
             f.write(f"// Variables\n\n{[total_steps, nombre_case]}\n\nEnd")
 
+
 def avancer(*args):
     '''Fait avencer le jeu d'une unité de temps'''
     if Running: pass
@@ -178,11 +177,13 @@ def change_field_size(*args):
     Main_Frame.focus() 
     canvas_refresh(); Canvas.update()
 
+
 def del_fourmi(*args):
     global fourmi_objs
     
     fourmi_objs.remove(args[1])
     canvas_refresh(); Canvas.update()
+
 
 def change_type_case(fourmi, y, x):
     '''Change la couleur de la case en fonction de sa couleur precedente'''
@@ -230,7 +231,6 @@ def fourmi_update():
         return
     
 
-
 def retour(*args):
     '''Fait retourner le jeu d'une unité de temps'''
     global directions, refesh_counter, total_steps, fourmi_objs
@@ -275,6 +275,7 @@ def canvas_refresh():
     for fourmi in fourmi_objs:
         fourmi["obj"] = Canvas.create_rectangle(fourmi["pos"][1] * (Height / nombre_case), fourmi["pos"][0] * (Width / nombre_case), (fourmi["pos"][1] + 1) * (Height / nombre_case), (fourmi["pos"][0] + 1) * (Width / nombre_case), outline = Grid_Line, fill = fourmi["couleur"])
         Canvas.tag_bind(fourmi["obj"],"<Button-3>", lambda x, fourmi = fourmi: del_fourmi(x, fourmi))
+
 
 def reset_field(*args):
     '''Resets the field with the ants starting position'''
@@ -393,6 +394,7 @@ def ajout_fourmi(*args):
 
     fourmi_create_window.mainloop()
 
+
 # ========== Tkinter GUI ==========
 
 racine.title("La Fourmi de Langton")
@@ -452,7 +454,6 @@ label_steps.place          (x = 10, y = 10)
 Canvas = tk.Canvas(field_frame, height = Height, width = Width, highlightthickness = 0, bg = "#1b1b1b")
 Canvas.pack(expand = 1, anchor = "center")
 canvas_refresh() # Affiche le canvas pour la premiere fois
-
 
 # ========== Raccourcis Clavier ==========
 
