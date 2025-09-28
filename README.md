@@ -27,4 +27,4 @@ L'objectif de ce projet repose sur la création de *"La Fourmi de Langton"*, un 
 \
 **LA BIBLIOTHÈQUE - LE CODE :**
 \
-https://ahmadpro.notion.site/LE-CODE-La-Fourmi-de-Langton-py-f4d7173740314084be3bc8fe718ac946
+https://ahmadpro.notion.site/LE-CODE-La-Fourmi-de-Langton-py-e3875db6c6d84bd5ba510779ad8d8a4c?source=copy_link
