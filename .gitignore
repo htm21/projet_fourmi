@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.env
+.venv
+env/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Rust
+target/
+Cargo.lock
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp / brouillons
+*.bak
+Save*.txt
+"A faire*.txt"
+TODO.txt
+
+# Sujets de cours (ne pas versionner)
+énoncé.pdf
+Sujet_*.pdf
+sujet_*.pdf
+

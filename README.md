@@ -1,30 +1,39 @@
-[Sujet_fourmi.pdf](https://github.com/uvsq22202060/projet_fourmi/files/10853209/Sujet_fourmi.pdf)
-# *La Fourmi de Langton, un projet de Licence Informatique*
+# Langton's Ant 🐜
 
+A Python simulation of [Langton's Ant](https://en.wikipedia.org/wiki/Langton%27s_ant) — a cellular automaton that generates complex emergent patterns from two simple rules.
 
-**GROUPE DE TD : BI - TD02**
-\
-\
-**NOM DES ÉTUDIANTS** : \
-Ahmad HATOUM (22202060) - Francesco DI Gennaro (22205989) - Daniel KEBBOUS (22208555) - Yasmine FAIZ (22202730) 
-\
-\
-**URL DE DÉPÔT DU PROJET** : https://github.com/htm21/projet_fourmi
+## How it works
 
-# Les Objectifs du projet
+The ant moves on an infinite grid following these rules:
+- **White cell** → turn 90° right, flip cell to black, move forward
+- **Black cell** → turn 90° left, flip cell to white, move forward
 
-L'objectif de ce projet repose sur la création de *"La Fourmi de Langton"*, un automate cellulaire qui se déplace sur une grille (créée manuellement grâce au module *Tkinter* ) en fonction de paramètre précis, la couleur de la cellule, les différentes règles du projet sont exposées dans le wiki du projet : https://github.com/uvsq22202060/projet_fourmi/wiki/Principe-et-description-de-l'automate-de-la-fourmille-de-langton.
+After ~10,000 steps, the ant spontaneously starts building an infinitely repeating diagonal "highway" — a classic example of emergent complexity from simple rules.
 
-# Les Différentes Étapes de notre projet
+## Features
 
-- Création de l'interface graphique via le module tkinter, avec la grille, les boutons retranscrits à travers des frames
-- Création du code permettant la formation de la fourmi et de ses divers comportement demandés (dès qu'elle sort du haut de la grille, elle réapparaît au niveau inférieur de la grille, etc).
-- Implémentation des différentes fonctions de l'étape précédente à l'interface graphique (c'est à dire l’assignation de chaque bouton à une fonction bien précise)
-- Focalisation sur la partie "Pour allez plus loin"
+- Interactive GUI built with `tkinter`
+- Step-by-step and continuous simulation modes
+- Configurable grid size and simulation speed
+- Support for extended multi-state rules (e.g. `LLRR`, `RLR`, ...)
 
+## Getting Started
 
-# LE CODE - La Fourmi de Langton.py
-\
-**LA BIBLIOTHÈQUE - LE CODE :**
-\
-https://ahmadpro.notion.site/LE-CODE-La-Fourmi-de-Langton-py-e3875db6c6d84bd5ba510779ad8d8a4c?source=copy_link
+```bash
+pip install tkinter
+python "La Fourmi de Langton.py"
+```
+
+## Tech Stack
+
+| Tool | Purpose |
+|------|---------|
+| Python 3 | Core language |
+| Tkinter | GUI framework |
+
+## Authors
+
+Ahmad Hatoum · Francesco Di Gennaro · Daniel Kebbous · Yasmine Faiz
+
+*L1 Computer Science project — Université de Versailles Saint-Quentin-en-Yvelines*
+
